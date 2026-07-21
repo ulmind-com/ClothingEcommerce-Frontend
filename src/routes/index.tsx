@@ -1,13 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import {
-  AnimatePresence,
-  motion,
-  useMotionValue,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import {
@@ -27,6 +20,7 @@ import type { Category, HomeSection, Product } from "@/types/api";
 import heroBridal from "@/assets/hero-bridal.png.asset.json";
 import heroRedBride from "@/assets/hero-red-bride.png.asset.json";
 import heroColorEditorial from "@/assets/hero-color-editorial.jpg.asset.json";
+import { CuratedThisSeason } from "@/components/home/CuratedThisSeason";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
