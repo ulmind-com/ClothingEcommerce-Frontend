@@ -32,6 +32,7 @@ import { EditorialSpotlight } from "@/components/home/EditorialSpotlight";
 import { AtelierStories } from "@/components/home/AtelierStories";
 import { CoutureSimplicity } from "@/components/home/CoutureSimplicity";
 import { DiagonalEdit } from "@/components/home/DiagonalEdit";
+import { MaisonAtelierShowcase } from "@/components/home/MaisonAtelierShowcase";
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
     await Promise.all([
@@ -60,6 +61,7 @@ function Home() {
       <DiagonalEdit />
       <NewArrivalsRail />
       <CampaignQuote />
+      <MaisonAtelierShowcase />
     </SiteChrome>
   );
 }

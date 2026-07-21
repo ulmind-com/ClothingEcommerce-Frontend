@@ -1,31 +1,60 @@
-## Replace atelier images in "Threads of a Living Heritage"
+## Plan: "Maison Atelier" showcase section (Posh-style)
 
-Swap all 8 marquee images in `src/components/home/AtelierStories.tsx` with the 8 user-uploaded photos. Remove AI-generated atelier assets (`atelier-3` through `atelier-8`) from the codebase.
+Add a new editorial section just above the footer on the homepage that recreates the uploaded reference 1:1 in structure — 4 tall portrait "boxes" with models sitting on the ledge, brand mark + tagline centered underneath — but rebranded to Maison. Footer stays exactly as it is today.
 
-### Steps
+### Where it goes
 
-1. **Upload 8 user images** via `lovable-assets` from `/mnt/user-uploads/` → new pointers in `src/assets/`:
-   - `atelier-new-1.jpeg` — peach sequined saree (lattice wall)
-   - `atelier-new-2.jpeg` — Shahid-style beige suit
-   - `atelier-new-3.jpeg` — coffee date linen look
-   - `atelier-new-4.jpeg` — maroon velvet saree portrait
-   - `atelier-new-5.jpeg` — red peplum lehenga (blue door)
-   - `atelier-new-6.jpeg` — maroon couple bridal (palace)
-   - `atelier-new-7.jpeg` — ivory sherwani couple
-   - `atelier-new-8.jpeg` — ivory sherwani + green dupatta
+`src/routes/index.tsx` — mount `<MaisonAtelierShowcase />` immediately after the existing `CampaignQuote` block and before `<SiteFooter />` (footer is already rendered by `SiteChrome`, so no footer changes).
 
-2. **Edit `src/components/home/AtelierStories.tsx`**
-   - Remove imports for `atelier-1` … `atelier-8` (both existing `.asset.json` and `.jpg` imports).
-   - Import the 8 new asset pointers.
-   - Rebuild the `IMAGES` array with the new URLs + fresh, editorial alt text.
-   - Keep the existing tilt array, marquee animation, header, and CTA untouched.
+### New file: `src/components/home/MaisonAtelierShowcase.tsx`
 
-3. **Delete unused assets** via `lovable-assets delete` on the AI-generated files no longer referenced anywhere:
-   - `src/assets/atelier-1.jpeg.asset.json`
-   - `src/assets/atelier-2.jpeg.asset.json`
-   - `src/assets/atelier-3.jpg` … `atelier-8.jpg` (rm — these are local files, not CDN pointers)
-   - Only after confirming via `rg` they aren't referenced by any other component.
+Layout, matching the reference:
 
-### Out of scope
+```text
+              [ warm champagne / sand background, soft radial glow ]
 
-No changes to layout, motion, typography, header copy, or the "Explore the House" CTA. No backend/API changes.
+   ┌─────┐    ┌─────┐    ┌─────┐    ┌─────┐
+   │ img │    │ img │    │ img │    │ img │     ← 4 tan rounded rectangles
+   │  1  │    │  2  │    │  3  │    │  4  │       (aspect 3/4, tan #C9A87A-ish)
+   └──▼──┘    └──▼──┘    └──▼──┘    └──▼──┘     ← models overflow bottom edge,
+     sit         sit        sit        sit        casting a soft ground shadow
+
+                        Maison            ← script/serif wordmark
+                       — couture —         ← thin eyebrow under it
+
+           Welcome to couture that doesn't
+             just dress you, it defines you.
+```
+
+Key visual details to match the reference:
+- Background: warm champagne gradient (reuses `--cream` / `--champagne` tokens) with a subtle radial vignette.
+- 4 equal tiles, `aspect-[3/4]`, `rounded-[6px]`, solid tan fill (`bg-champagne/70`), thin inset shadow.
+- Model images sit *inside* each tile but the figure extends ~15–20% below the tile's bottom edge (negative margin on the `<img>`, `object-cover object-top`, tile has `overflow-visible`).
+- Each model gets a soft elliptical drop-shadow on the "floor" below the tile (blurred radial div) so they feel grounded.
+- Row of tiles horizontally centered, gap-6, max-width ~1200px. On mobile: 2×2 grid.
+- Below the tiles: centered "Maison" wordmark in `font-display` italic + a hairline `— couture —` eyebrow, then the two-line tagline in warm-gray.
+
+### Motion (Framer Motion + Reveal)
+- Each tile fades + rises in staggered (0.1s apart) on scroll-into-view via existing `<Reveal>`.
+- Each model image has a very slow idle float (`y: [0, -4, 0]`, 6s, staggered) so the group feels alive but calm.
+- Wordmark uses a mask reveal similar to other sections.
+
+### Images
+
+Need 4 editorial portraits where the subject is full-body and can visually "sit" on the tile edge. Reuse existing atelier assets that already show seated / relaxed full-body poses:
+- `atelier-new-2.jpeg` (tailored beige suit)
+- `atelier-new-3.jpeg` (linen shirt + chinos)
+- `atelier-new-7.jpeg` (ivory sherwani portrait)
+- `atelier-new-8.jpeg` (ivory sherwani + brocade)
+
+If any of these don't crop convincingly as "seated on ledge", swap to another `atelier-new-*` asset — no new uploads or AI generation.
+
+### Footer
+
+No changes. The existing `SiteFooter` (rendered by `SiteChrome`) already contains the exact copy the user listed (Maison / Shop / Client Services / Newsletter / © 2026 / Privacy / Terms), so it stays as-is.
+
+### Files touched
+- Add: `src/components/home/MaisonAtelierShowcase.tsx`
+- Edit: `src/routes/index.tsx` (import + mount above footer, after CampaignQuote)
+
+No backend, styles.css, or footer changes.
