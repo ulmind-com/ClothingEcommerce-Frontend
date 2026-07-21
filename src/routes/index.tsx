@@ -311,19 +311,22 @@ function NewArrivalsRail() {
   return (
     <section className="py-16 md:py-24 border-t border-border">
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
-        <div className="mb-10 flex items-end justify-between">
-          <div>
-            <div className="eyebrow mb-3">Just In</div>
-            <h2 className="font-display text-4xl md:text-5xl">New arrivals</h2>
-          </div>
-          <Link to="/shop" className="eyebrow inline-flex items-center gap-2 hover:text-champagne">
-            View all <ArrowRight className="h-3 w-3" />
-          </Link>
+        <div className="mb-10 text-center">
+          <div className="eyebrow mb-3">Just In</div>
+          <h2 className="font-display text-4xl md:text-5xl">New arrivals</h2>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-14">
-          {products.slice(0, 8).map((p, i) => (
+          {products.slice(0, 4).map((p, i) => (
             <ProductCard key={p.id} product={p} index={i} />
           ))}
+        </div>
+        <div className="mt-14 flex justify-center">
+          <Link
+            to="/shop"
+            className="eyebrow relative inline-flex items-center gap-2 pb-1 after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-ink hover:text-champagne hover:after:bg-champagne transition-colors"
+          >
+            See more <ArrowRight className="h-3 w-3" />
+          </Link>
         </div>
       </div>
     </section>
