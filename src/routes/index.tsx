@@ -19,6 +19,7 @@ import { productImage } from "@/lib/utils/product";
 import type { Category, HomeSection, Product } from "@/types/api";
 import heroBridal from "@/assets/hero-bridal.png.asset.json";
 import heroRedBride from "@/assets/hero-red-bride.png.asset.json";
+import heroColorEditorial from "@/assets/hero-color-editorial.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
@@ -69,6 +70,13 @@ function Hero() {
       subtitle:
         "A bridal chapter drawn in scarlet lace and hand-set stones — an heirloom in the making.",
       code: "Bridal Couture",
+    },
+    {
+      image: heroColorEditorial.url,
+      title: "Colour, worn with intention.",
+      subtitle:
+        "Vermillion, teal and tangerine collide in a ready-to-wear story made for the bold.",
+      code: "Resort 26",
     },
   ];
 
