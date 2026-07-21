@@ -1,29 +1,49 @@
-## Runway Lookbook — match reference exactly
+## Runway Lookbook — match reference 1:1
 
-Two fixes to `src/components/home/RunwayLookbook.tsx` (frontend only, no backend/admin touched):
+Reference (Marc Jacobs SS19) shows:
+- Pure white/near-white background, no cream tint, no grain
+- Models are clean cutouts standing on a shared ground line — no card frames, no shadows, no colored halos
+- Active look on the RIGHT (not centered), sharp and full-size
+- 1 medium sharp look to its immediate left (previous look, still fairly crisp)
+- 3–4 progressively smaller, heavily blurred figures further left forming a receding "crowd"
+- Right rail: 2 product cards, minimal — thin border, heart icon top-left, `+` bottom-right, tiny uppercase title + price
+- Bottom-left: giant thin "LOOK 15" + "SHOP THE LOOK" underline link
+- Top-left: "SPRING SUMMER 2019" eyebrow + short paragraph
 
-### 1. Transparent model cutouts
-Reference shows models on pure white with no photo background — floating cutouts, not framed cards.
+Current implementation has the active model centered with figures on both sides, uses a cream/grain background, `mix-blend-mode: multiply`, and rounded/bordered right-rail cards. That's why it doesn't read like the reference.
 
-- Remove the card frame around the active look: drop the rounded container, border, shadow, and any background fill on the hero image wrapper.
-- Render the active model image as a bare `<img>` (or motion.img) with `object-contain`, no bg, no radius, no overlay tint.
-- Same for the receding/incoming looks — no card chrome, just the image.
-- Section background stays flat cream/white so the (already near-white) product photography reads as cut-out. We won't do real bg-removal on the images themselves; the frame removal is what creates the "transparent" look in the reference.
+### Fixes to `src/components/home/RunwayLookbook.tsx`
 
-### 2. Stacked blurred looks behind the active one
-Reference: the previous looks stay visible as a receding trail on the left — smaller, heavily blurred, desaturated, lower opacity, overlapping horizontally. Right side shows the next look coming in, lightly blurred.
+**Background**
+- Swap section bg from `bg-secondary/60 silk-grain` to pure `bg-white` (or `bg-cream` only if cream is already near-white — otherwise white). Remove grain texture on this section only.
+- Drop `mix-blend-mode: multiply` on model images; on white bg the near-white product photos will already read as cutouts.
 
-Rebuild the strip so at any time we render ~5 looks positioned relative to the active index:
-- offset −3: `scale 0.45`, `blur-2xl`, `opacity 0.25`, grayscale, far left
-- offset −2: `scale 0.6`, `blur-xl`, `opacity 0.45`, grayscale
-- offset −1: `scale 0.8`, `blur-md`, `opacity 0.7`, slight desat
-- offset  0: `scale 1`, no blur, full color, centered, sharp — the hero
-- offset +1: `scale 0.85`, `blur-sm`, `opacity 0.8`, entering from right
+**Composition — active look on the right, trail on the left**
+Reposition slots so nothing sits to the right of the active look:
+- offset −4: far left, scale 0.35, blur 26px, opacity 0.18, grayscale
+- offset −3: scale 0.45, blur 18px, opacity 0.28, grayscale
+- offset −2: scale 0.6,  blur 10px, opacity 0.45, desaturated
+- offset −1: scale 0.85, blur 2px,  opacity 0.9, near-sharp (the "previous" look, mid-stage)
+- offset  0: scale 1, no blur, full color, anchored to the RIGHT side of the stage (~72% x), sharp
+- Remove offset +1 entirely (reference has nothing entering from the right)
 
-All positioned absolutely on a shared horizontal axis, aligned to the ground line (bottom-aligned) so the models "stand" together like the reference. Framer Motion `layout` + spring transition handles the slide when index advances; heights/blur/opacity animate via variants keyed to offset.
+All figures stay bottom-aligned on a shared ground line with `transform-origin: bottom center`. Spring transition on `left` + `scale` + `filter` so on advance, everything slides one slot leftward and the previous active look becomes the new offset −1.
 
-Left rail (SPRING SUMMER label + copy) and right rail (2 product cards restacking) stay as-is. The big `LOOK NN` counter and `SHOP THE LOOK` link stay bottom-left as in the reference.
+**Right rail — minimal product cards**
+Rebuild `ShopCard`:
+- Remove background fill, drop shadow, and rounded corners
+- Thin 1px hairline border only (`border-ink/15`), square corners
+- Heart (outline) icon top-left over the image
+- `+` icon bottom-right of the info row (already there — keep, but lighten)
+- Image bg = white, `object-contain` so the product floats like the reference (not `object-cover`)
+- Uppercase tiny tracked title, price below in muted ink
+- Keep 2-card stack with the existing 2-card swap AnimatePresence
 
-### Notes
-- No new dependencies, no backend calls changed — still driven by `productsOptions`.
-- No admin panel changes.
+**Left rail copy**
+- Keep "Autumn / Winter 26" eyebrow + paragraph as-is (already matches reference structure)
+- Keep giant LOOK NN counter + champagne progress rule + "Shop the Look" underline link
+
+**No backend / admin / API changes.** Still driven by `productsOptions`. No new deps.
+
+### Files touched
+- `src/components/home/RunwayLookbook.tsx` — slot table, stage bg, remove multiply blend, rework `ShopCard`
