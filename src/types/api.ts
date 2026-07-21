@@ -127,3 +127,14 @@ export interface Me {
   role?: string;
   [k: string]: unknown;
 }
+
+export interface VideoItem {
+  id: ID;
+  video_url: string;
+  poster?: string;
+  title?: string;
+  subtitle?: string;
+  order: number;
+  active: boolean;
+  [k: string]: unknown;
+}
