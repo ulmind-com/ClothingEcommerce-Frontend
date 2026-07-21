@@ -17,6 +17,7 @@ import { LuxLink } from "@/components/ui/LuxButton";
 import { MaskReveal, Reveal } from "@/lib/motion/Reveal";
 import { productImage } from "@/lib/utils/product";
 import type { Banner, Category, HomeSection, Product } from "@/types/api";
+import heroBridal from "@/assets/hero-bridal.png.asset.json";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
@@ -47,55 +48,21 @@ function Home() {
 }
 
 function Hero() {
-  const { data: banners = [] } = useQuery(bannersOptions());
-  const { data: categories = [] } = useQuery(categoriesOptions());
-  const active = banners
-    .filter((b: Banner) => b.active)
-    .sort((a, b) => a.order - b.order);
-
   type Slide = {
     image?: string;
     title: string;
     subtitle?: string;
     code?: string;
   };
-  const slides: Slide[] =
-    active.length >= 2
-      ? active.map((b) => ({
-          image: b.image,
-          title: b.title || "A quiet study in modern couture.",
-          subtitle: b.subtitle,
-          code: b.code,
-        }))
-      : (() => {
-          const base: Slide[] = active.map((b) => ({
-            image: b.image,
-            title: b.title || "A quiet study in modern couture.",
-            subtitle: b.subtitle,
-            code: b.code,
-          }));
-          const catSlides: Slide[] = categories
-            .filter((c: Category) => !c.parent_id && c.image)
-            .slice(0, 4)
-            .map((c) => ({
-              image: c.image!,
-              title: c.name,
-              subtitle:
-                "Handcrafted in the atelier — a limited series for the season ahead.",
-              code: "The House",
-            }));
-          const merged = [...base, ...catSlides];
-          return merged.length > 0
-            ? merged
-            : [
-                {
-                  title: "A quiet study in modern couture.",
-                  subtitle:
-                    "Ateliers in Milan, cutting rooms in Kolkata. A limited series shaped by hand.",
-                  code: "Autumn / Winter 26",
-                },
-              ];
-        })();
+  const slides: Slide[] = [
+    {
+      image: heroBridal.url,
+      title: "A quiet study in modern couture.",
+      subtitle:
+        "Ateliers in Milan, cutting rooms in Kolkata. A limited series shaped by hand for the season ahead.",
+      code: "Autumn / Winter 26",
+    },
+  ];
 
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
