@@ -1,33 +1,38 @@
-## Add "Curated This Season" section after Hero
+## Problem
 
-A new editorial category showcase inserted directly after the Hero on the Home page, matching the reference (4 tall portrait tiles with category name overlay, centered title + subtitle above). Fully backend-driven from the existing `/categories` endpoint — no backend or admin panel changes.
+Two sections on the home page currently show the same root categories back-to-back:
 
-### Data source (read-only, existing endpoint)
-- Uses `categoriesOptions()` → `GET /categories` (already loaded in the home route loader).
-- Picks the first 4 root categories (`!parent_id`) that have an `image`, ordered by their existing `order` field.
-- Uses each category's `image`, `name`, and `image_scale` exactly as the admin panel configures them.
-- Clicking a tile navigates to `/shop?category=<id>` (same pattern as existing `CategoriesBento`).
-- Graceful fallback: if fewer than 4 categories have images, renders whatever exists (min 1); returns null if none — so admin edits control the section fully.
+1. `CuratedThisSeason` — "Curated This Season" (recently added, 3D tilt tiles)
+2. `CategoriesBento` — "The House / Explore the world of Maison" (bento grid tiles)
 
-### Layout & composition (match reference)
-- Full-bleed 4-column row on desktop, 2-column on mobile, edge-to-edge with a small 2px gap between tiles (like the reference).
-- Each tile: tall portrait aspect (~3/4), image `object-cover`, category name in uppercase serif tracked wide, centered at the bottom over a soft dark gradient.
-- Header block above the grid: centered "CURATED THIS SEASON" eyebrow-serif, small italic subtitle below ("A blend of classic silhouettes and our signature shine, embodied by enigmatic sequins.").
-- Placed immediately after `<Hero />` and before `<CategoriesBento />` in `src/routes/index.tsx`.
+Both pull from `/categories` and render the same 4 root categories, so the page reads as a duplicate.
 
-### Motion & "3D" feel (Framer Motion + CSS, no new deps)
-- **Section entrance**: title + subtitle mask-reveal using existing `MaskReveal` / `Reveal` primitives.
-- **Tile stagger-in**: each tile fades + rises with a 90ms stagger as it enters viewport (Framer Motion `whileInView`).
-- **3D tilt on hover**: subtle perspective tilt (rotateX/rotateY up to ~6°) driven by mouse position via `useMotionValue` + `useTransform`, with `transform-style: preserve-3d` and `perspective: 1200px` on the tile wrapper. Resets smoothly on mouse leave.
-- **Parallax image**: inside each tilted card, the image translates opposite the tilt (~z-depth illusion) and scales 1.06 on hover over a 1.4s cubic-bezier ease.
-- **Caption lift**: category name translates up ~6px and a hairline gold underline (champagne token) draws in from center on hover.
-- **Ambient shimmer**: a very slow (8s) diagonal light sweep across each tile on hover using a gradient mask — evokes silk/sequins without being flashy.
-- **Reduced motion**: all tilt/parallax/shimmer disabled when `prefers-reduced-motion: reduce`, falling back to a simple opacity fade.
+## Fix
 
-### Files touched
-- `src/routes/index.tsx` — add a new `CuratedThisSeason` component, mount it right after `<Hero />` inside `Home()`. No other files change.
-- No changes to API layer, types, admin panel, or backend.
+**1. Remove the duplicate**
+- Delete `CuratedThisSeason` from `src/routes/index.tsx` (import + JSX usage).
+- Delete the component file `src/components/home/CuratedThisSeason.tsx`.
 
-### Out of scope
-- No new endpoints, no new fields, no admin panel changes.
-- No heavy 3D library (Three.js/R3F) — kept as CSS 3D + Framer Motion to preserve the tight bundle from Phase 1.
+**2. Restyle `CategoriesBento` to match the reference**
+
+Keep the section header text ("The House" eyebrow + "Explore the world of Maison" heading) but move it to **centered** alignment like the reference. Replace the current bento with a clean 4-up row of tall portrait tiles:
+
+- Layout: 4 columns on desktop (`md:grid-cols-4`), 2 on mobile, **no gaps** between tiles (edge-to-edge like the reference), full-bleed width.
+- Tile aspect: `aspect-[3/5]` tall portraits (taller than current `3/4`).
+- Image: full-cover, subtle slow zoom on hover, no dark gradient overlay.
+- Label: category name centered at the bottom in cream serif caps with wide tracking (e.g. `LEHENGA`, `FUSION WEAR`), no arrow icon, no card border.
+- Subtitle under the heading: a short italic line ("A blend of classic silhouettes and our signature shine, embodied by enigmatic sequins.") — pulled from settings if available, otherwise a static tagline.
+- Bottom of section: centered "VIEW ALL" link with a thin underline, linking to `/shop`.
+- Motion: gentle stagger-in on scroll (reuse existing `Reveal`), champagne underline sweep on hover of the label.
+
+**3. Backend contract stays untouched**
+- Still calls `categoriesOptions()` (`GET /categories`) — no admin panel or backend changes.
+- Uses `image` and `image_scale` fields already on the Category type.
+- Falls back gracefully when fewer than 4 root categories have images.
+
+## Files touched
+
+- `src/routes/index.tsx` — remove `CuratedThisSeason` import + usage; rewrite the `CategoriesBento` function.
+- `src/components/home/CuratedThisSeason.tsx` — delete.
+
+No new dependencies, no backend changes.
