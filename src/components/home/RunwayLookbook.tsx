@@ -77,7 +77,7 @@ export function RunwayLookbook() {
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
-      className="relative w-full bg-secondary/60 silk-grain overflow-hidden min-h-[780px] md:min-h-[880px] py-12 md:py-16"
+      className="relative w-full bg-white overflow-hidden min-h-[780px] md:min-h-[880px] py-12 md:py-16"
       aria-label="Runway lookbook"
     >
       <div className="absolute inset-x-0 top-0 h-px bg-ink/10" aria-hidden />
