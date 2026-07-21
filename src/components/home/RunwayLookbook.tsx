@@ -9,13 +9,18 @@ import { formatPrice } from "@/lib/utils/format";
 import type { Product } from "@/types/api";
 
 const AUTOPLAY_MS = 6000;
+// Bottom-aligned runway. All figures share the same ground line; scale +
+// transform-origin: bottom makes them stand together like the reference.
 const STAGE_SLOTS = [
-  { offset: -3, x: "8%", y: 26, width: 118, height: 370, opacity: 0.18, blur: 12, scale: 0.88, z: 1 },
-  { offset: -2, x: "18%", y: 18, width: 132, height: 405, opacity: 0.26, blur: 10, scale: 0.9, z: 2 },
-  { offset: -1, x: "31%", y: 8, width: 150, height: 455, opacity: 0.34, blur: 8, scale: 0.92, z: 3 },
-  { offset: 0, x: "61%", y: 0, width: 270, height: 635, opacity: 1, blur: 0, scale: 1, z: 8 },
-  { offset: 1, x: "86%", y: 34, width: 165, height: 470, opacity: 0.22, blur: 12, scale: 0.9, z: 2 },
+  { offset: -3, x: "2%",  scale: 0.45, opacity: 0.22, blur: 22, saturate: 0.2, z: 1 },
+  { offset: -2, x: "12%", scale: 0.6,  opacity: 0.4,  blur: 14, saturate: 0.35, z: 2 },
+  { offset: -1, x: "26%", scale: 0.8,  opacity: 0.7,  blur: 6,  saturate: 0.6, z: 3 },
+  { offset:  0, x: "50%", scale: 1,    opacity: 1,    blur: 0,  saturate: 1,   z: 8 },
+  { offset:  1, x: "84%", scale: 0.85, opacity: 0.75, blur: 4,  saturate: 0.7, z: 2 },
 ] as const;
+
+const FIGURE_WIDTH = 320;   // base width of the sharp centered look
+const FIGURE_HEIGHT = 620;  // base height of the sharp centered look
 
 function hasImage(p: Product) {
   return !!productImage(p);
@@ -141,7 +146,6 @@ export function RunwayLookbook() {
 
             {/* staged runway composition */}
             <div className="absolute inset-0">
-              <div className="absolute inset-x-6 md:inset-x-8 bottom-4 top-10 border-y border-ink/5" aria-hidden />
               <AnimatePresence initial={false} mode="popLayout">
                 {stagedLooks.map(({ product: p, slot }) => {
                   const isActive = slot.offset === 0;
@@ -151,65 +155,54 @@ export function RunwayLookbook() {
                     <motion.div
                       key={`${slot.offset}-${p.id}`}
                       initial={{
-                        x: isIncoming ? "96%" : slot.x,
-                        y: slot.y + (reduce ? 0 : 18),
+                        left: isIncoming ? "96%" : slot.x,
                         opacity: 0,
                         scale: slot.scale * 0.96,
-                        filter: reduce ? "none" : `blur(${slot.blur + 4}px) saturate(0.45)`,
+                        filter: reduce
+                          ? "none"
+                          : `blur(${slot.blur + 4}px) saturate(${slot.saturate})`,
                       }}
                       animate={{
-                        x: slot.x,
-                        y: slot.y,
+                        left: slot.x,
                         opacity: slot.opacity,
                         scale: slot.scale,
                         filter: reduce
                           ? "none"
-                          : `blur(${slot.blur}px) saturate(${isActive ? 1.02 : 0.48})`,
+                          : `blur(${slot.blur}px) saturate(${slot.saturate})`,
                       }}
                       exit={{
-                        x: slot.offset < 0 ? "0%" : "48%",
-                        y: slot.y + (reduce ? 0 : 26),
+                        left: slot.offset < 0 ? "-4%" : "48%",
                         opacity: 0,
                         scale: slot.scale * 0.9,
-                        filter: reduce ? "none" : "blur(16px) saturate(0.35)",
+                        filter: reduce ? "none" : "blur(20px) saturate(0.2)",
                       }}
                       transition={{ type: "spring", stiffness: 112, damping: 24, mass: 0.9 }}
-                      className="absolute bottom-5 left-0 will-change-transform"
-                      style={{ width: slot.width, zIndex: slot.z }}
+                      className="absolute bottom-0 will-change-transform"
+                      style={{
+                        width: FIGURE_WIDTH,
+                        height: FIGURE_HEIGHT,
+                        marginLeft: -FIGURE_WIDTH / 2,
+                        transformOrigin: "bottom center",
+                        zIndex: slot.z,
+                      }}
                     >
                       <Link
                         to="/product/$id"
                         params={{ id: p.id }}
                         aria-label={p.title}
-                        className="block relative"
+                        className="block relative h-full w-full"
                         tabIndex={isActive ? 0 : -1}
                       >
-                        <motion.div
-                          className="relative overflow-hidden"
-                          animate={{
-                            width: slot.width,
-                            height: slot.height,
-                          }}
-                          transition={{ type: "spring", stiffness: 118, damping: 23 }}
-                        >
-                          {img ? (
-                            <img
-                              src={img}
-                              alt={p.title}
-                              className="h-full w-full object-cover"
-                              draggable={false}
-                              loading={isActive ? "eager" : "lazy"}
-                            />
-                          ) : null}
-                          {isActive && (
-                            <motion.div
-                              className="absolute inset-0 pointer-events-none"
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              style={{ boxShadow: "0 44px 90px -34px color-mix(in oklab, var(--ink) 46%, transparent)" }}
-                            />
-                          )}
-                        </motion.div>
+                        {img ? (
+                          <img
+                            src={img}
+                            alt={p.title}
+                            className="h-full w-full object-contain object-bottom select-none"
+                            style={{ mixBlendMode: "multiply" }}
+                            draggable={false}
+                            loading={isActive ? "eager" : "lazy"}
+                          />
+                        ) : null}
                       </Link>
                     </motion.div>
                   );
