@@ -1,43 +1,31 @@
-## New section: "The Diagonal Edit" (above New Arrivals)
+## Replace atelier images in "Threads of a Living Heritage"
 
-A cinematic diagonal-stacked carousel driven by live backend products, placed between `CoutureSimplicity` and `NewArrivalsRail` on the home route.
+Swap all 8 marquee images in `src/components/home/AtelierStories.tsx` with the 8 user-uploaded photos. Remove AI-generated atelier assets (`atelier-3` through `atelier-8`) from the codebase.
 
-### Files
+### Steps
 
-1. **`src/components/ui/DiagonalCarousel.tsx`** — new
-   - Port the provided component to our stack (TanStack Start / React 19, no `"use client"` needed).
-   - Fix the stripped JSX/props from the paste; keep the same API (`items`, `activeIndex`, `slideSize`, `rotationStep`, `verticalStep`, `inactiveScale`, `loop`, `showControls`, `showDots`, etc.).
-   - Use existing `cn` from `@/lib/utils` (already present via shadcn setup — no new deps; `framer-motion`, `lucide-react`, `clsx`, `tailwind-merge` are already installed).
-   - Style controls/dots against our luxury tokens (ink/cream/champagne) instead of generic dark mode.
+1. **Upload 8 user images** via `lovable-assets` from `/mnt/user-uploads/` → new pointers in `src/assets/`:
+   - `atelier-new-1.jpeg` — peach sequined saree (lattice wall)
+   - `atelier-new-2.jpeg` — Shahid-style beige suit
+   - `atelier-new-3.jpeg` — coffee date linen look
+   - `atelier-new-4.jpeg` — maroon velvet saree portrait
+   - `atelier-new-5.jpeg` — red peplum lehenga (blue door)
+   - `atelier-new-6.jpeg` — maroon couple bridal (palace)
+   - `atelier-new-7.jpeg` — ivory sherwani couple
+   - `atelier-new-8.jpeg` — ivory sherwani + green dupatta
 
-2. **`src/components/home/DiagonalEdit.tsx`** — new
-   - `useQuery(productsOptions({ limit: 8 }))`; filter to items with `productImage(p)`; guard empty state (`return null`).
-   - Map to `DiagonalCarouselItem[]` → `{ src: productImage(p), title: p.name }`.
-   - Autoplay every ~4s (pause on hover / when tab hidden / `useReducedMotion`), controlled via `activeIndex` + `onActiveIndexChange`, `loop`.
-   - Layout: full-bleed cream section, `py-24 md:py-32`, fixed viewport height (`h-[560px] md:h-[720px]`) so the carousel has stable height as required.
-   - Header (centered, editorial):
-     - Eyebrow: `The Edit`
-     - Display heading: `Worn on a Diagonal.`
-     - Sub: `Eight pieces from the season, tilted into perspective.`
-   - Below carousel: active product name + price + `LuxLink` to `/product/$id` (updates as `activeIndex` changes).
+2. **Edit `src/components/home/AtelierStories.tsx`**
+   - Remove imports for `atelier-1` … `atelier-8` (both existing `.asset.json` and `.jpg` imports).
+   - Import the 8 new asset pointers.
+   - Rebuild the `IMAGES` array with the new URLs + fresh, editorial alt text.
+   - Keep the existing tilt array, marquee animation, header, and CTA untouched.
 
-3. **`src/routes/index.tsx`** — edit
-   - Import `DiagonalEdit`.
-   - Insert `<DiagonalEdit />` between `<CoutureSimplicity />` and `<NewArrivalsRail />`.
-
-### Behaviour / motion
-
-- Diagonal stack geometry: `slideSize=280`, `rotationStep=22`, `verticalStep=110`, `inactiveScale=0.62`.
-- Spring transition preserved from source (`bounce: 0.16, duration: 0.85`).
-- Keyboard: ArrowLeft/Right navigate (already in source).
-- Click any inactive slide → becomes active.
-- Autoplay stops on user interaction (hover, focus, click, key).
-
-### Backend contract
-
-- Reads existing `productsOptions({ limit: 8 })` — no admin panel or schema changes. No new endpoints, no writes.
+3. **Delete unused assets** via `lovable-assets delete` on the AI-generated files no longer referenced anywhere:
+   - `src/assets/atelier-1.jpeg.asset.json`
+   - `src/assets/atelier-2.jpeg.asset.json`
+   - `src/assets/atelier-3.jpg` … `atelier-8.jpg` (rm — these are local files, not CDN pointers)
+   - Only after confirming via `rg` they aren't referenced by any other component.
 
 ### Out of scope
 
-- No changes to existing sections, header, cart, or API layer.
-- No new assets generated; images come from backend product responses.
+No changes to layout, motion, typography, header copy, or the "Explore the House" CTA. No backend/API changes.
