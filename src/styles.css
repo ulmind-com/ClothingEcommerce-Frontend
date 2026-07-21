@@ -171,3 +171,14 @@
     radial-gradient(900px 600px at 90% 30%, color-mix(in oklab, var(--ink) 12%, transparent), transparent 55%),
     radial-gradient(800px 800px at 60% 90%, color-mix(in oklab, var(--champagne) 18%, transparent), transparent 60%);
 }
+
+@keyframes reel-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.reel-marquee {
+  animation-name: reel-marquee;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}

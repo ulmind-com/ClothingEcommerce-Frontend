@@ -1,194 +1,98 @@
 import { useQuery } from "@tanstack/react-query";
-import { AnimatePresence, motion } from "framer-motion";
+import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, Volume2, VolumeX } from "lucide-react";
 import { videosOptions } from "@/lib/api/queries";
-import { MaskReveal } from "@/lib/motion/Reveal";
 import type { VideoItem } from "@/types/api";
+import { MaskReveal } from "@/lib/motion/Reveal";
+import reel1 from "@/assets/reel-1.mp4.asset.json";
+import reel2 from "@/assets/reel-2.mp4.asset.json";
+import reel3 from "@/assets/reel-3.mp4.asset.json";
+import reel4 from "@/assets/reel-4.mp4.asset.json";
+import reel5 from "@/assets/reel-5.mp4.asset.json";
+import reel6 from "@/assets/reel-6.mp4.asset.json";
 
-const FALLBACK_VIDEOS: VideoItem[] = [
-  {
-    id: "fallback-1",
-    video_url:
-      "https://videos.pexels.com/video-files/5069959/5069959-uhd_2560_1440_25fps.mp4",
-    title: "Woven by hand",
-    subtitle: "A study in couture craft.",
-    order: 1,
-    active: true,
-  },
-  {
-    id: "fallback-2",
-    video_url:
-      "https://videos.pexels.com/video-files/3971359/3971359-uhd_2560_1440_25fps.mp4",
-    title: "The atelier at work",
-    subtitle: "Every stitch, a signature.",
-    order: 2,
-    active: true,
-  },
-];
+const FALLBACK: VideoItem[] = [reel1, reel2, reel3, reel4, reel5, reel6].map((a, i) => ({
+  id: `fallback-${i + 1}`,
+  video_url: a.url,
+  order: i,
+  active: true,
+}));
+
+function ReelCard({ item }: { item: VideoItem }) {
+  const ref = useRef<HTMLVideoElement>(null);
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    v.muted = true;
+    const play = () => v.play().catch(() => {});
+    if (v.readyState >= 2) play();
+    else v.addEventListener("loadeddata", play, { once: true });
+  }, []);
+  return (
+    <Link
+      to="/shop"
+      className="group relative block shrink-0 w-[180px] md:w-[220px] aspect-[9/16] overflow-hidden bg-ink border border-border/40 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.5)] transition-all duration-700 hover:shadow-[0_30px_80px_-20px_rgba(180,140,80,0.35)] hover:border-champagne/60"
+    >
+      <video
+        ref={ref}
+        src={item.video_url}
+        poster={item.poster}
+        muted
+        loop
+        playsInline
+        autoPlay
+        preload="metadata"
+        className="h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.04]"
+      />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+    </Link>
+  );
+}
 
 export function VideoReel() {
-  const { data = [] } = useQuery(videosOptions());
-  const backendVideos: VideoItem[] = data
-    .filter((v) => v.active && v.video_url)
-    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-  const videos: VideoItem[] =
-    backendVideos.length > 0 ? backendVideos : FALLBACK_VIDEOS;
-
-  const [index, setIndex] = useState(0);
-  const [muted, setMuted] = useState(true);
+  const { data: videos = [] } = useQuery(videosOptions());
+  const source = videos.length > 0 ? videos : FALLBACK;
   const [paused, setPaused] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [inView, setInView] = useState(true);
-  const sectionRef = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
   const reduce =
     typeof window !== "undefined" &&
     window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      { threshold: 0.2 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    if (paused || !inView) v.pause();
-    else v.play().catch(() => {});
-  }, [paused, inView, index]);
-
-  if (videos.length === 0) return null;
-
-  const current = videos[index];
-  const advance = (dir: number) => {
-    setProgress(0);
-    setIndex((i) => (i + dir + videos.length) % videos.length);
-  };
+  const loop = [...source, ...source];
+  const duration = Math.max(30, source.length * 7);
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative bg-ink text-cream py-20 md:py-28 overflow-hidden"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
-      <div className="mx-auto max-w-[900px] px-6 text-center mb-12 md:mb-16">
-        <div className="eyebrow !text-cream/60 mb-4">Film</div>
-        <h2 className="font-display text-4xl md:text-5xl lg:text-6xl">
-          The House in motion
-        </h2>
-        <p className="mt-5 font-display italic text-cream/70 text-lg md:text-xl leading-relaxed">
-          Moving portraits from the atelier — a season captured in light and thread.
+    <section className="py-24 md:py-32 bg-secondary/40 overflow-hidden">
+      <div className="mx-auto max-w-[900px] px-6 text-center mb-14 md:mb-20">
+        <div className="eyebrow mb-4">In Motion</div>
+        <MaskReveal>
+          <h2 className="font-display text-4xl md:text-5xl lg:text-6xl">
+            The Maison, in frames
+          </h2>
+        </MaskReveal>
+        <p className="mt-6 font-display italic text-warm-gray text-lg md:text-xl leading-relaxed">
+          Fleeting moments from the atelier —
+          <br className="hidden md:block" /> woven, worn, remembered.
         </p>
       </div>
 
-      <div className="mx-auto max-w-[1400px] px-4 md:px-6">
-        <div className="relative w-full overflow-hidden bg-black aspect-[4/5] md:aspect-[16/9] group">
-          <AnimatePresence initial={false} mode="sync">
-            <motion.div
-              key={`v-${current.id}-${index}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1, transition: { duration: reduce ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] } }}
-              exit={{ opacity: 0, transition: { duration: reduce ? 0 : 0.7, ease: [0.22, 1, 0.36, 1] } }}
-              className="absolute inset-0"
-            >
-              <video
-                ref={videoRef}
-                src={current.video_url}
-                poster={current.poster}
-                autoPlay
-                muted={muted}
-                playsInline
-                preload="metadata"
-                className="h-full w-full object-cover"
-                onEnded={() => advance(1)}
-                onTimeUpdate={(e) => {
-                  const t = e.currentTarget;
-                  if (t.duration > 0) setProgress(t.currentTime / t.duration);
-                }}
-              />
-            </motion.div>
-          </AnimatePresence>
-
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-ink/20" />
-
-          {(current.title || current.subtitle) && (
-            <div className="absolute left-6 md:left-10 bottom-10 md:bottom-14 max-w-lg z-10">
-              {current.title && (
-                <MaskReveal key={`t-${current.id}`}>
-                  <h3 className="font-display text-2xl md:text-4xl leading-tight">
-                    {current.title}
-                  </h3>
-                </MaskReveal>
-              )}
-              {current.subtitle && (
-                <p className="mt-3 text-cream/75 text-sm md:text-base max-w-md">
-                  {current.subtitle}
-                </p>
-              )}
-            </div>
-          )}
-
-          {videos.length > 1 && (
-            <>
-              <button
-                aria-label="Previous video"
-                onClick={() => advance(-1)}
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-10 hidden md:grid place-items-center h-12 w-12 rounded-full border border-cream/30 text-cream/70 opacity-0 hover:opacity-100 hover:text-cream hover:border-cream/70 transition-all duration-500 group-hover:opacity-60"
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </button>
-              <button
-                aria-label="Next video"
-                onClick={() => advance(1)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 hidden md:grid place-items-center h-12 w-12 rounded-full border border-cream/30 text-cream/70 opacity-0 hover:opacity-100 hover:text-cream hover:border-cream/70 transition-all duration-500 group-hover:opacity-60"
-              >
-                <ChevronRight className="h-5 w-5" />
-              </button>
-            </>
-          )}
-
-          <button
-            aria-label={muted ? "Unmute" : "Mute"}
-            onClick={() => setMuted((m) => !m)}
-            className="absolute right-4 bottom-4 z-10 grid place-items-center h-10 w-10 rounded-full border border-cream/30 bg-ink/40 backdrop-blur-sm text-cream/80 hover:text-cream hover:border-cream/70 transition-all"
-          >
-            {muted ? <VolumeX className="h-4 w-4" /> : <Volume2 className="h-4 w-4" />}
-          </button>
-
-          <div className="absolute inset-x-0 bottom-0 h-[2px] bg-cream/15 z-10">
-            <div
-              className="h-full bg-champagne transition-[width] duration-150 ease-linear"
-              style={{ width: `${Math.min(100, progress * 100)}%` }}
-            />
-          </div>
+      <div
+        className="relative"
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+      >
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-24 md:w-40 bg-gradient-to-r from-secondary/40 to-transparent z-10" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-24 md:w-40 bg-gradient-to-l from-secondary/40 to-transparent z-10" />
+        <div
+          className="flex gap-4 md:gap-6 w-max reel-marquee"
+          style={{
+            animationDuration: `${duration}s`,
+            animationPlayState: paused || reduce ? "paused" : "running",
+          }}
+        >
+          {loop.map((item, i) => (
+            <ReelCard key={`${item.id}-${i}`} item={item} />
+          ))}
         </div>
-
-        {videos.length > 1 && (
-          <div className="mt-8 flex items-center justify-center gap-2">
-            {videos.map((_, i) => (
-              <button
-                key={i}
-                aria-label={`Go to video ${i + 1}`}
-                onClick={() => {
-                  setProgress(0);
-                  setIndex(i);
-                }}
-                className={`h-1.5 rounded-full transition-all duration-500 ${
-                  i === index ? "w-8 bg-cream" : "w-1.5 bg-cream/40 hover:bg-cream/70"
-                }`}
-              />
-            ))}
-          </div>
-        )}
       </div>
     </section>
   );
