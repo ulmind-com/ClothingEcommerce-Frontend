@@ -60,27 +60,14 @@ function Hero() {
   };
   const slides: Slide[] = [
     {
-      image: heroBridal.url,
+      image: heroCoupleBridal.url,
       title: "A quiet study in modern couture.",
       subtitle:
         "Ateliers in Milan, cutting rooms in Kolkata. A limited series shaped by hand for the season ahead.",
       code: "Autumn / Winter 26",
     },
-    {
-      image: heroRedBride.url,
-      title: "The Bride, in crimson stillness.",
-      subtitle:
-        "A bridal chapter drawn in scarlet lace and hand-set stones — an heirloom in the making.",
-      code: "Bridal Couture",
-    },
-    {
-      image: heroColorEditorial.url,
-      title: "Colour, worn with intention.",
-      subtitle:
-        "Vermillion, teal and tangerine collide in a ready-to-wear story made for the bold.",
-      code: "Resort 26",
-    },
   ];
+
 
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
