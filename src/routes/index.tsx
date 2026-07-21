@@ -1,6 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useScroll,
+  useSpring,
+  useTransform,
+} from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import {
@@ -39,6 +46,7 @@ function Home() {
   return (
     <SiteChrome transparentHeader>
       <Hero />
+      <CuratedThisSeason />
       <CategoriesBento />
       <NewArrivalsRail />
       <EditorialSplit />
