@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { ChevronLeft, ChevronRight, Heart, Plus } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { productsOptions } from "@/lib/api/queries";
 import { productImage } from "@/lib/utils/product";
@@ -9,14 +9,14 @@ import { formatPrice } from "@/lib/utils/format";
 import type { Product } from "@/types/api";
 
 const AUTOPLAY_MS = 6000;
-// Bottom-aligned runway. All figures share the same ground line; scale +
-// transform-origin: bottom makes them stand together like the reference.
+// Reference (Marc Jacobs SS19): active look anchored right, trailing blurred
+// crowd receding to the left, nothing entering from the right.
 const STAGE_SLOTS = [
-  { offset: -3, x: "2%",  scale: 0.45, opacity: 0.22, blur: 22, saturate: 0.2, z: 1 },
-  { offset: -2, x: "12%", scale: 0.6,  opacity: 0.4,  blur: 14, saturate: 0.35, z: 2 },
-  { offset: -1, x: "26%", scale: 0.8,  opacity: 0.7,  blur: 6,  saturate: 0.6, z: 3 },
-  { offset:  0, x: "50%", scale: 1,    opacity: 1,    blur: 0,  saturate: 1,   z: 8 },
-  { offset:  1, x: "84%", scale: 0.85, opacity: 0.75, blur: 4,  saturate: 0.7, z: 2 },
+  { offset: -4, x: "6%",  scale: 0.35, opacity: 0.18, blur: 26, saturate: 0.15, z: 1 },
+  { offset: -3, x: "14%", scale: 0.45, opacity: 0.28, blur: 18, saturate: 0.2,  z: 2 },
+  { offset: -2, x: "26%", scale: 0.6,  opacity: 0.45, blur: 10, saturate: 0.35, z: 3 },
+  { offset: -1, x: "44%", scale: 0.85, opacity: 0.92, blur: 2,  saturate: 0.85, z: 5 },
+  { offset:  0, x: "72%", scale: 1,    opacity: 1,    blur: 0,  saturate: 1,    z: 8 },
 ] as const;
 
 const FIGURE_WIDTH = 320;   // base width of the sharp centered look
