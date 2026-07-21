@@ -13,12 +13,12 @@ export function SiteFooter() {
         <img
           src={atelierFooter.url}
           alt="Maison atelier — four models in recessed niches"
-          className="block w-full h-auto select-none"
+          className="block w-full h-auto select-none -mb-px"
           draggable={false}
         />
       </div>
       <div className="text-ink" style={{ backgroundColor: "#d9bc8b" }}>
-        <div className="mx-auto max-w-[1400px] px-6 md:px-10 pt-16 pb-14 grid gap-12 md:grid-cols-4">
+        <div className="mx-auto max-w-[1400px] px-6 md:px-10 pt-2 pb-10 grid gap-10 md:grid-cols-4">
           <div className="md:col-span-1">
             <div className="font-display text-3xl tracking-[0.32em] uppercase text-ink">
               Maison
