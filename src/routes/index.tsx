@@ -20,6 +20,10 @@ import type { Category, HomeSection, Product } from "@/types/api";
 import heroBridal from "@/assets/hero-bridal.png.asset.json";
 import heroRedBride from "@/assets/hero-red-bride.png.asset.json";
 import heroColorEditorial from "@/assets/hero-color-editorial.jpg.asset.json";
+import catLehenga from "@/assets/cat-lehenga.jpeg.asset.json";
+import catFusion from "@/assets/cat-fusion.jpeg.asset.json";
+import catSherwani from "@/assets/cat-sherwani.jpeg.asset.json";
+import catSaree from "@/assets/cat-saree.jpeg.asset.json";
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
     await Promise.all([
