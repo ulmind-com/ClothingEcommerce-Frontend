@@ -153,8 +153,8 @@ export function ShopGallery() {
     const base = PILL_LABELS.map((label, i) => {
       const cat = categories[i] as Category | undefined;
       return {
-        label: cat?.name ?? label,
-        image: cat?.image ?? PILL_FALLBACK_IMAGES[i],
+        label,
+        image: PILL_FALLBACK_IMAGES[i],
         categoryId: cat?.id,
         gradient: PILL_GRADIENTS[i % PILL_GRADIENTS.length],
       };
