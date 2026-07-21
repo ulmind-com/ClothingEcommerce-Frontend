@@ -1,37 +1,29 @@
-## Plan: make the runway lookbook match the reference video
+## Runway Lookbook — match reference exactly
 
-### What I’ll change
-- Rework only `RunwayLookbook` after the video reel.
-- Keep it powered by the existing product data (`productsOptions`) and existing product routes.
-- Do not touch backend, admin panel, schema, API files, or product data logic.
+Two fixes to `src/components/home/RunwayLookbook.tsx` (frontend only, no backend/admin touched):
 
-### Reference behavior to match
-- The active look stands center-right, sharp and full-height.
-- Previous looks stay grouped on the left as blurred/desaturated background figures.
-- The right side shows exactly 2 product cards for the active look.
-- When the next look arrives, those 2 cards animate out and a different pair animates in for that look.
-- The whole composition slides like the video: left cluster recedes, active model enters/stays sharp, right-rail product cards swap in sync.
+### 1. Transparent model cutouts
+Reference shows models on pure white with no photo background — floating cutouts, not framed cards.
 
-### Implementation details
-- Replace the current equal-width carousel strip with a staged composition:
-  - left ghost cluster: 2–3 previous/nearby looks, small + blurred + low opacity;
-  - active look: large portrait model/product image, sharp, higher z-index;
-  - incoming look: faint partial figure on the right, blurred, hinting the next transition.
-- Rebuild the right rail so each look deterministically gets its own 2-card set:
-  - look 01 → products 02/03;
-  - look 02 → products 03/04;
-  - etc., wrapping around;
-  - the cards will use `AnimatePresence` keys tied to the active look so they visibly swap on every look change.
-- Tighten the animation timing to feel like the video:
-  - stage slide/scale/blur transition on every advance;
-  - 2-card rail exits upward/fades, then next two stagger in;
-  - progress and LOOK counter remain synced with autoplay.
-- Improve layout proportions closer to the reference:
-  - pale blue/mint editorial canvas;
-  - top faux navigation line;
-  - big LOOK counter bottom-left;
-  - right cards slimmer, clean white, stacked with spacing.
+- Remove the card frame around the active look: drop the rounded container, border, shadow, and any background fill on the hero image wrapper.
+- Render the active model image as a bare `<img>` (or motion.img) with `object-contain`, no bg, no radius, no overlay tint.
+- Same for the receding/incoming looks — no card chrome, just the image.
+- Section background stays flat cream/white so the (already near-white) product photography reads as cut-out. We won't do real bg-removal on the images themselves; the frame removal is what creates the "transparent" look in the reference.
 
-### Validation
-- Check the section in the live preview at the current mobile-ish viewport and desktop sizing.
-- Confirm the rail changes 2 cards per look and the active look remains sharp while background figures blur.
+### 2. Stacked blurred looks behind the active one
+Reference: the previous looks stay visible as a receding trail on the left — smaller, heavily blurred, desaturated, lower opacity, overlapping horizontally. Right side shows the next look coming in, lightly blurred.
+
+Rebuild the strip so at any time we render ~5 looks positioned relative to the active index:
+- offset −3: `scale 0.45`, `blur-2xl`, `opacity 0.25`, grayscale, far left
+- offset −2: `scale 0.6`, `blur-xl`, `opacity 0.45`, grayscale
+- offset −1: `scale 0.8`, `blur-md`, `opacity 0.7`, slight desat
+- offset  0: `scale 1`, no blur, full color, centered, sharp — the hero
+- offset +1: `scale 0.85`, `blur-sm`, `opacity 0.8`, entering from right
+
+All positioned absolutely on a shared horizontal axis, aligned to the ground line (bottom-aligned) so the models "stand" together like the reference. Framer Motion `layout` + spring transition handles the slide when index advances; heights/blur/opacity animate via variants keyed to offset.
+
+Left rail (SPRING SUMMER label + copy) and right rail (2 product cards restacking) stay as-is. The big `LOOK NN` counter and `SHOP THE LOOK` link stay bottom-left as in the reference.
+
+### Notes
+- No new dependencies, no backend calls changed — still driven by `productsOptions`.
+- No admin panel changes.
