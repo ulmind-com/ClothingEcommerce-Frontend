@@ -17,9 +17,8 @@ import { LuxLink } from "@/components/ui/LuxButton";
 import { MaskReveal, Reveal } from "@/lib/motion/Reveal";
 import { productImage } from "@/lib/utils/product";
 import type { Category, HomeSection, Product } from "@/types/api";
-import heroBridal from "@/assets/hero-bridal.png.asset.json";
-import heroRedBride from "@/assets/hero-red-bride.png.asset.json";
-import heroColorEditorial from "@/assets/hero-color-editorial.jpg.asset.json";
+import heroCoupleBridal from "@/assets/hero-couple-bridal.png.asset.json";
+
 import catLehenga from "@/assets/cat-lehenga.jpeg.asset.json";
 import catFusion from "@/assets/cat-fusion.jpeg.asset.json";
 import catSherwani from "@/assets/cat-sherwani.jpeg.asset.json";
