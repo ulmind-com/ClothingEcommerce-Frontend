@@ -71,6 +71,13 @@ function Hero() {
         "A bridal chapter drawn in scarlet lace and hand-set stones — an heirloom in the making.",
       code: "Bridal Couture",
     },
+    {
+      image: heroColorEditorial.url,
+      title: "Colour, worn with intention.",
+      subtitle:
+        "Vermillion, teal and tangerine collide in a ready-to-wear story made for the bold.",
+      code: "Resort 26",
+    },
   ];
 
   const [index, setIndex] = useState(0);
