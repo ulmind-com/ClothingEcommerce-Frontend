@@ -275,7 +275,7 @@ function CategoriesBento() {
               />
               <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-ink/90 via-ink/40 to-transparent pointer-events-none" />
               <div className="absolute inset-x-0 bottom-8 flex flex-col items-center text-cream">
-                <span className="eyebrow text-sm tracking-[0.35em]">{tile.label}</span>
+                <span className="eyebrow text-sm tracking-[0.35em] !text-cream drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]">{tile.label}</span>
                 <span className="mt-3 block h-px w-0 bg-champagne transition-all duration-700 group-hover:w-10" />
               </div>
             </Link>
