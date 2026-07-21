@@ -20,6 +20,7 @@ import type { Category, HomeSection, Product } from "@/types/api";
 import heroBridal from "@/assets/hero-bridal.png.asset.json";
 import heroRedBride from "@/assets/hero-red-bride.png.asset.json";
 import heroColorEditorial from "@/assets/hero-color-editorial.jpg.asset.json";
+import { CuratedThisSeason } from "@/components/home/CuratedThisSeason";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
@@ -39,6 +40,7 @@ function Home() {
   return (
     <SiteChrome transparentHeader>
       <Hero />
+      <CuratedThisSeason />
       <CategoriesBento />
       <NewArrivalsRail />
       <EditorialSplit />

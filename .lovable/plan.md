@@ -1,35 +1,33 @@
-## What to change
+## Add "Curated This Season" section after Hero
 
-Two focused frontend tweaks to the Home hero in `src/routes/index.tsx`. No backend, no other pages.
+A new editorial category showcase inserted directly after the Hero on the Home page, matching the reference (4 tall portrait tiles with category name overlay, centered title + subtitle above). Fully backend-driven from the existing `/categories` endpoint — no backend or admin panel changes.
 
-### 1. Hero → multi-image editorial slideshow
+### Data source (read-only, existing endpoint)
+- Uses `categoriesOptions()` → `GET /categories` (already loaded in the home route loader).
+- Picks the first 4 root categories (`!parent_id`) that have an `image`, ordered by their existing `order` field.
+- Uses each category's `image`, `name`, and `image_scale` exactly as the admin panel configures them.
+- Clicking a tile navigates to `/shop?category=<id>` (same pattern as existing `CategoriesBento`).
+- Graceful fallback: if fewer than 4 categories have images, renders whatever exists (min 1); returns null if none — so admin edits control the section fully.
 
-Currently the hero shows only the first active banner. Turn it into an auto-rotating, cinematic slideshow using **all active banners** from `/banners` (already fetched via `bannersOptions`).
+### Layout & composition (match reference)
+- Full-bleed 4-column row on desktop, 2-column on mobile, edge-to-edge with a small 2px gap between tiles (like the reference).
+- Each tile: tall portrait aspect (~3/4), image `object-cover`, category name in uppercase serif tracked wide, centered at the bottom over a soft dark gradient.
+- Header block above the grid: centered "CURATED THIS SEASON" eyebrow-serif, small italic subtitle below ("A blend of classic silhouettes and our signature shine, embodied by enigmatic sequins.").
+- Placed immediately after `<Hero />` and before `<CategoriesBento />` in `src/routes/index.tsx`.
 
-- Use every `banner.active === true`, sorted by `order`.
-- If backend returns <2 banners, fall back to composing slides from `categories` that have an `image` (couture / bridal / ethnic categories) so the hero always feels multi-image, matching the Manish Malhotra reference.
-- Auto-advance every ~5.5s with a soft Ken Burns (scale 1 → 1.08) + crossfade using Framer Motion `AnimatePresence` (mode `wait` off, opacity 0→1, 1.2s ease `[0.22,1,0.36,1]`).
-- Animate the eyebrow / headline / subtitle / CTAs per slide too (re-key on active index → MaskReveal re-plays) so each slide feels like its own campaign frame.
-- Add subtle pagination dots bottom-right (mirroring the reference), plus keep the existing "Scroll" indicator.
-- Add prev / next chevrons on hover at left/right edges (desktop only), thin `cream/40` strokes — luxury, not e-com.
-- Pause auto-advance on hover; respect `prefers-reduced-motion` (no auto-advance, no Ken Burns).
-- Keep the existing parallax `y` / `scale` scroll transform on the whole slide layer.
+### Motion & "3D" feel (Framer Motion + CSS, no new deps)
+- **Section entrance**: title + subtitle mask-reveal using existing `MaskReveal` / `Reveal` primitives.
+- **Tile stagger-in**: each tile fades + rises with a 90ms stagger as it enters viewport (Framer Motion `whileInView`).
+- **3D tilt on hover**: subtle perspective tilt (rotateX/rotateY up to ~6°) driven by mouse position via `useMotionValue` + `useTransform`, with `transform-style: preserve-3d` and `perspective: 1200px` on the tile wrapper. Resets smoothly on mouse leave.
+- **Parallax image**: inside each tilted card, the image translates opposite the tilt (~z-depth illusion) and scales 1.06 on hover over a 1.4s cubic-bezier ease.
+- **Caption lift**: category name translates up ~6px and a hairline gold underline (champagne token) draws in from center on hover.
+- **Ambient shimmer**: a very slow (8s) diagonal light sweep across each tile on hover using a gradient mask — evokes silk/sequins without being flashy.
+- **Reduced motion**: all tilt/parallax/shimmer disabled when `prefers-reduced-motion: reduce`, falling back to a simple opacity fade.
 
-### 2. Fix "Discover the collection" button readability
-
-The button currently uses `bg-cream text-ink` but the `LuxLink` `variant="solid"` base classes are overriding hover/typography such that the label is barely legible against the bright hero image (see screenshot). Fix by:
-
-- Switching the primary CTA to a **solid ink pill** (`bg-ink text-cream hover:bg-champagne hover:text-ink`) — high contrast against any banner photo, matches editorial luxury pattern.
-- Slightly increasing tracking + weight of the CTA label inside `LuxLink` (only if the shared component already exposes it; otherwise pass through `className` with `tracking-[0.2em] font-medium`).
-- Secondary "Book an appointment" stays outlined cream, but darken border to `border-cream` (from `/70`) and add a soft `backdrop-blur-sm bg-ink/10` so it reads on bright frames too.
-- Add a subtle bottom vignette (already exists via gradient) — bump the bottom stop from `ink/70` → `ink/85` under the CTA zone so buttons always sit on a legible base regardless of which slide is showing.
-
-### Technical notes
-
-- All changes live in `src/routes/index.tsx` (`Hero` function) plus, if needed, a tiny className tweak passed to `LuxLink`.
-- No new deps. Framer Motion + existing MaskReveal cover crossfades and text re-reveals.
-- No changes to data fetching — the `bannersOptions` query already returns the full list.
+### Files touched
+- `src/routes/index.tsx` — add a new `CuratedThisSeason` component, mount it right after `<Hero />` inside `Home()`. No other files change.
+- No changes to API layer, types, admin panel, or backend.
 
 ### Out of scope
-
-Cart drawer, auth, checkout, other routes — untouched. Will pick those up next per the Phase 2 plan.
+- No new endpoints, no new fields, no admin panel changes.
+- No heavy 3D library (Three.js/R3F) — kept as CSS 3D + Framer Motion to preserve the tight bundle from Phase 1.
