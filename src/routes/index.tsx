@@ -62,11 +62,23 @@ function Hero() {
   };
   const slides: Slide[] = [
     {
-      image: heroCoupleBridal.url,
+      image: heroBridal.url,
       title: "A quiet study in modern couture.",
       subtitle:
         "Ateliers in Milan, cutting rooms in Kolkata. A limited series shaped by hand for the season ahead.",
       code: "Autumn / Winter 26",
+    },
+    {
+      image: heroRedBride.url,
+      title: "Crimson, worn with intention.",
+      subtitle: "Sculpted silhouettes in vermillion and rose for the season's most memorable moments.",
+      code: "Bridal Edit",
+    },
+    {
+      image: heroCoupleBridal.url,
+      title: "Two souls, one composition.",
+      subtitle: "Hand-embroidered ensembles for the couple who writes their own traditions.",
+      code: "The Wedding Journal",
     },
   ];
 
