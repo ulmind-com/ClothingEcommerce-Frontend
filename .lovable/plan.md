@@ -1,62 +1,43 @@
-## Next Section: "Sophisticated Comfort, Couture Simplicity"
+## New section: "The Diagonal Edit" (above New Arrivals)
 
-Add a new playful editorial section after `AtelierStories` in `src/routes/index.tsx`, matching the uploaded CoutureNest reference 1:1 — same layout, same shapes, same composition.
-
-### Layout (split-screen, asymmetric)
-
-```text
-┌──────────────────────────────────────────────────────────┐
-│  [LEFT ~45%]              [RIGHT ~55%]                   │
-│  ┌─────────────────┐      Sophisticated ●yellow          │
-│  │ purple arch     │      comfort,      ●pink circle+model│
-│  │  ┌───────────┐  │      couture                        │
-│  │  │ model in  │  │      simplicity.  ●orange dot       │
-│  │  │ pink fur  │  │                                     │
-│  │  │ (portrait)│  │      Elevate your style with a      │
-│  │  └───────────┘  │      touch of effortless...         │
-│  │ ★pink sparkle   │                                     │
-│  └─────────────────┘      [ Shop Now ]  [ Collections ]  │
-│                                          ●yellow circle+ │
-│                                           model + film    │
-│                                           strip squiggle  │
-└──────────────────────────────────────────────────────────┘
-```
-
-### SVG shapes (inline, hand-drawn, animated)
-
-Build all decorative shapes as inline SVG components with subtle Framer Motion floats/rotations:
-- Large **purple arch** framing the left model (rounded-top rectangle mask)
-- **Pink 4-point sparkle/star** (top-left of arch)
-- **Yellow half-circle** behind "So" of headline
-- **Blue small circle** top-right of headline
-- **Pink blob/circle** with small model portrait inset (mid-right of headline)
-- **Orange donut** (small ring) beside "simplicity."
-- **Yellow filled circle** bottom-right with model portrait inset
-- **Purple half-moon** mid-right edge
-- **Film-strip squiggle** (perforated wavy line) bottom-right
-
-### Typography & copy
-
-- Headline: massive serif display (Cormorant Garamond, ~7xl-9xl), tight leading, black weight. "Sophisticated" first word uses yellow-highlight behind "So".
-- Body: 2-3 lines warm-gray sans, ~base size
-- Two CTAs: solid champagne/yellow "Shop Now" pill + outlined "Collections" pill
-
-### Data / backend
-
-- Pull 3 product/model images from existing `productsOptions({ limit: 12 })` query for the 3 model insets (main left, small pink circle, bottom yellow circle) — no new endpoints, no admin changes.
-- Fallback to existing generated portraits from `AtelierStories` assets if products lack images.
-
-### Motion
-
-- Reveal on scroll (Framer Motion + existing `Reveal` component)
-- Each SVG shape idle-floats (y/rotate loop, staggered)
-- Model images: subtle Ken Burns on the main portrait
-- Headline: MaskReveal line-by-line
+A cinematic diagonal-stacked carousel driven by live backend products, placed between `CoutureSimplicity` and `NewArrivalsRail` on the home route.
 
 ### Files
 
-- **Create** `src/components/home/CoutureSimplicity.tsx` — the section
-- **Create** `src/components/home/couture-shapes.tsx` — inline SVG shape primitives (Arch, Sparkle, HalfCircle, Donut, HalfMoon, FilmStrip, Blob)
-- **Edit** `src/routes/index.tsx` — mount `<CoutureSimplicity />` after `<AtelierStories />`
+1. **`src/components/ui/DiagonalCarousel.tsx`** — new
+   - Port the provided component to our stack (TanStack Start / React 19, no `"use client"` needed).
+   - Fix the stripped JSX/props from the paste; keep the same API (`items`, `activeIndex`, `slideSize`, `rotationStep`, `verticalStep`, `inactiveScale`, `loop`, `showControls`, `showDots`, etc.).
+   - Use existing `cn` from `@/lib/utils` (already present via shadcn setup — no new deps; `framer-motion`, `lucide-react`, `clsx`, `tailwind-merge` are already installed).
+   - Style controls/dots against our luxury tokens (ink/cream/champagne) instead of generic dark mode.
 
-Frontend only. No backend, no admin, no new API endpoints.
+2. **`src/components/home/DiagonalEdit.tsx`** — new
+   - `useQuery(productsOptions({ limit: 8 }))`; filter to items with `productImage(p)`; guard empty state (`return null`).
+   - Map to `DiagonalCarouselItem[]` → `{ src: productImage(p), title: p.name }`.
+   - Autoplay every ~4s (pause on hover / when tab hidden / `useReducedMotion`), controlled via `activeIndex` + `onActiveIndexChange`, `loop`.
+   - Layout: full-bleed cream section, `py-24 md:py-32`, fixed viewport height (`h-[560px] md:h-[720px]`) so the carousel has stable height as required.
+   - Header (centered, editorial):
+     - Eyebrow: `The Edit`
+     - Display heading: `Worn on a Diagonal.`
+     - Sub: `Eight pieces from the season, tilted into perspective.`
+   - Below carousel: active product name + price + `LuxLink` to `/product/$id` (updates as `activeIndex` changes).
+
+3. **`src/routes/index.tsx`** — edit
+   - Import `DiagonalEdit`.
+   - Insert `<DiagonalEdit />` between `<CoutureSimplicity />` and `<NewArrivalsRail />`.
+
+### Behaviour / motion
+
+- Diagonal stack geometry: `slideSize=280`, `rotationStep=22`, `verticalStep=110`, `inactiveScale=0.62`.
+- Spring transition preserved from source (`bounce: 0.16, duration: 0.85`).
+- Keyboard: ArrowLeft/Right navigate (already in source).
+- Click any inactive slide → becomes active.
+- Autoplay stops on user interaction (hover, focus, click, key).
+
+### Backend contract
+
+- Reads existing `productsOptions({ limit: 8 })` — no admin panel or schema changes. No new endpoints, no writes.
+
+### Out of scope
+
+- No changes to existing sections, header, cart, or API layer.
+- No new assets generated; images come from backend product responses.

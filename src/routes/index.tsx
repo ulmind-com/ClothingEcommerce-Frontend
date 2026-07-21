@@ -31,6 +31,7 @@ import { ShopGallery } from "@/components/home/ShopGallery";
 import { EditorialSpotlight } from "@/components/home/EditorialSpotlight";
 import { AtelierStories } from "@/components/home/AtelierStories";
 import { CoutureSimplicity } from "@/components/home/CoutureSimplicity";
+import { DiagonalEdit } from "@/components/home/DiagonalEdit";
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
     await Promise.all([
@@ -56,6 +57,7 @@ function Home() {
       <EditorialSpotlight />
       <AtelierStories />
       <CoutureSimplicity />
+      <DiagonalEdit />
       <NewArrivalsRail />
       <EditorialSplit />
       <HomeSections />
