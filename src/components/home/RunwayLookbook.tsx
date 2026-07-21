@@ -106,7 +106,7 @@ export function RunwayLookbook() {
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: reduce ? 0 : -40, opacity: 0 }}
                   transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                  className="font-display text-[62px] md:text-[92px] leading-none text-ink"
+                  className="font-display text-[54px] md:text-[68px] xl:text-[78px] leading-none text-ink whitespace-nowrap"
                 >
                   LOOK {lookNumber}
                 </motion.div>
