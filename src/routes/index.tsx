@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
-import { ArrowRight } from "lucide-react";
+import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import {
   bannersOptions,
   categoriesOptions,
@@ -48,8 +48,72 @@ function Home() {
 
 function Hero() {
   const { data: banners = [] } = useQuery(bannersOptions());
-  const active = banners.filter((b: Banner) => b.active).sort((a, b) => a.order - b.order);
-  const banner = active[0];
+  const { data: categories = [] } = useQuery(categoriesOptions());
+  const active = banners
+    .filter((b: Banner) => b.active)
+    .sort((a, b) => a.order - b.order);
+
+  type Slide = {
+    image?: string;
+    title: string;
+    subtitle?: string;
+    code?: string;
+  };
+  const slides: Slide[] =
+    active.length >= 2
+      ? active.map((b) => ({
+          image: b.image,
+          title: b.title || "A quiet study in modern couture.",
+          subtitle: b.subtitle,
+          code: b.code,
+        }))
+      : (() => {
+          const base: Slide[] = active.map((b) => ({
+            image: b.image,
+            title: b.title || "A quiet study in modern couture.",
+            subtitle: b.subtitle,
+            code: b.code,
+          }));
+          const catSlides: Slide[] = categories
+            .filter((c: Category) => !c.parent_id && c.image)
+            .slice(0, 4)
+            .map((c) => ({
+              image: c.image!,
+              title: c.name,
+              subtitle:
+                "Handcrafted in the atelier — a limited series for the season ahead.",
+              code: "The House",
+            }));
+          const merged = [...base, ...catSlides];
+          return merged.length > 0
+            ? merged
+            : [
+                {
+                  title: "A quiet study in modern couture.",
+                  subtitle:
+                    "Ateliers in Milan, cutting rooms in Kolkata. A limited series shaped by hand.",
+                  code: "Autumn / Winter 26",
+                },
+              ];
+        })();
+
+  const [index, setIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const reduce =
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  useEffect(() => {
+    if (reduce || paused || slides.length < 2) return;
+    const id = window.setInterval(() => {
+      setIndex((i) => (i + 1) % slides.length);
+    }, 5500);
+    return () => window.clearInterval(id);
+  }, [reduce, paused, slides.length]);
+
+  const go = (dir: number) =>
+    setIndex((i) => (i + dir + slides.length) % slides.length);
+  const slide = slides[index] ?? slides[0];
 
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
@@ -57,59 +121,120 @@ function Hero() {
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
 
   return (
-    <section ref={ref} className="relative h-[100svh] w-full overflow-hidden bg-ink text-cream">
+    <section
+      ref={ref}
+      className="relative h-[100svh] w-full overflow-hidden bg-ink text-cream"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
       <motion.div style={{ y, scale }} className="absolute inset-0">
-        {banner?.image ? (
-          <img
-            src={banner.image}
-            alt={banner.title || "Campaign"}
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <div className="h-full w-full silk-grain" />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-b from-ink/40 via-ink/20 to-ink/70" />
+        <AnimatePresence initial={false}>
+          <motion.div
+            key={`slide-${index}`}
+            initial={{ opacity: 0, scale: reduce ? 1 : 1.02 }}
+            animate={{
+              opacity: 1,
+              scale: reduce ? 1 : 1.08,
+              transition: {
+                opacity: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
+                scale: { duration: 6.5, ease: "linear" },
+              },
+            }}
+            exit={{ opacity: 0, transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] } }}
+            className="absolute inset-0"
+          >
+            {slide?.image ? (
+              <img
+                src={slide.image}
+                alt={slide.title}
+                className="h-full w-full object-cover"
+              />
+            ) : (
+              <div className="h-full w-full silk-grain" />
+            )}
+          </motion.div>
+        </AnimatePresence>
+        <div className="absolute inset-0 bg-gradient-to-b from-ink/50 via-ink/25 to-ink/90" />
       </motion.div>
 
       <div className="relative z-10 flex h-full flex-col justify-end px-6 pb-16 md:px-16 md:pb-24">
-        <div className="max-w-3xl">
+        <div className="max-w-3xl" key={`copy-${index}`}>
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.9 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
             className="eyebrow text-cream/70 mb-6"
           >
-            {banner?.code || "Autumn / Winter 26"}
+            {slide?.code || "Autumn / Winter 26"}
           </motion.div>
           <MaskReveal>
             <h1 className="font-display text-5xl md:text-7xl lg:text-[6.5rem] leading-[1.02] tracking-[-0.01em]">
-              {banner?.title || "A quiet study in modern couture."}
+              {slide?.title}
             </h1>
           </MaskReveal>
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 0.8 }}
+            transition={{ delay: 0.9, duration: 0.8 }}
             className="mt-6 max-w-lg text-cream/75"
           >
-            {banner?.subtitle ||
+            {slide?.subtitle ||
               "Ateliers in Milan, cutting rooms in Kolkata. A limited series shaped by hand for the season ahead."}
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.4, duration: 0.8 }}
+            transition={{ delay: 1.1, duration: 0.8 }}
             className="mt-10 flex flex-wrap gap-4"
           >
-            <LuxLink to="/shop" variant="solid" className="bg-cream text-ink hover:bg-champagne">
+            <LuxLink
+              to="/shop"
+              variant="solid"
+              className="bg-ink text-cream border border-cream/20 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)] hover:bg-champagne hover:text-ink hover:border-champagne"
+            >
               Discover the collection
             </LuxLink>
-            <LuxLink to="/shop" variant="outline" className="border-cream/70 text-cream hover:bg-cream hover:text-ink">
+            <LuxLink
+              to="/shop"
+              variant="outline"
+              className="border-cream text-cream bg-ink/10 backdrop-blur-sm hover:bg-cream hover:text-ink"
+            >
               Book an appointment
             </LuxLink>
           </motion.div>
         </div>
       </div>
+
+      {slides.length > 1 && (
+        <>
+          <button
+            aria-label="Previous slide"
+            onClick={() => go(-1)}
+            className="absolute left-4 top-1/2 -translate-y-1/2 z-10 hidden md:grid place-items-center h-12 w-12 rounded-full border border-cream/30 text-cream/70 opacity-0 hover:opacity-100 hover:text-cream hover:border-cream/70 transition-all duration-500 group-hover:opacity-60"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            aria-label="Next slide"
+            onClick={() => go(1)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 z-10 hidden md:grid place-items-center h-12 w-12 rounded-full border border-cream/30 text-cream/70 opacity-0 hover:opacity-100 hover:text-cream hover:border-cream/70 transition-all duration-500"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                aria-label={`Go to slide ${i + 1}`}
+                onClick={() => setIndex(i)}
+                className={`h-1.5 rounded-full transition-all duration-500 ${
+                  i === index ? "w-8 bg-cream" : "w-1.5 bg-cream/40 hover:bg-cream/70"
+                }`}
+              />
+            ))}
+          </div>
+        </>
+      )}
 
       <motion.div
         initial={{ opacity: 0 }}
