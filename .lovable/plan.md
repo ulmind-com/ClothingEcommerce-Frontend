@@ -1,60 +1,44 @@
-## Plan: "Maison Atelier" showcase section (Posh-style)
+## Replace MaisonAtelierShowcase with exact reference layout + footer
 
-Add a new editorial section just above the footer on the homepage that recreates the uploaded reference 1:1 in structure — 4 tall portrait "boxes" with models sitting on the ledge, brand mark + tagline centered underneath — but rebranded to Maison. Footer stays exactly as it is today.
+The previous attempt didn't match. Rebuild the "above footer" section to mirror the uploaded reference 1:1, then keep the footer text below it.
 
-### Where it goes
+### 1. Rebuild `src/components/home/MaisonAtelierShowcase.tsx`
 
-`src/routes/index.tsx` — mount `<MaisonAtelierShowcase />` immediately after the existing `CampaignQuote` block and before `<SiteFooter />` (footer is already rendered by `SiteChrome`, so no footer changes).
+Recreate the reference exactly:
+- **Background**: full-bleed warm beige/sand wall (`#E8D4A8`-ish tone), tall section (~85vh).
+- **4 recessed niches**: darker tan rectangles (`#B8894A`-ish), portrait 3:5 ratio, evenly spaced across the top ~55% of the section, with soft inner shadow to feel recessed into the wall.
+- **Models sit/lean out of niches**: each model image is a transparent-background PNG positioned so legs/arms overflow *below* the niche's bottom edge onto the beige wall — not contained inside. Use `overflow-visible` on the niche wrapper; model `<img>` extends past the frame with `translate-y` so heels/shadow land on the wall.
+- **Cast shadows**: subtle soft drop-shadow on the wall beneath each model (CSS `filter: drop-shadow`) to sell the 3D depth.
+- **No captions inside the niches** — reference has none.
+- **Below the niches** (on the empty lower wall), place small editorial text centered: eyebrow "Maison — N° 04" + line "Poise, tailored in daylight." in serif italic, muted ink.
+- Subtle entrance: niches fade+rise on scroll (Reveal), models stagger in after with a slight y-lift using Framer Motion.
 
-### New file: `src/components/home/MaisonAtelierShowcase.tsx`
+Model images: reuse 4 existing atelier assets (transparent cut-outs aren't available, so use the current portraits inside the niches — accept that they'll be framed within rather than overflowing, unless suitable cut-out assets already exist). Verify what's in `src/assets/` first; if no transparent cut-outs exist, render the portraits fully inside the niches (still matches the "4 vertical frames on a beige wall" reading, just without overflow).
 
-Layout, matching the reference:
+### 2. Footer text under the section
 
-```text
-              [ warm champagne / sand background, soft radial glow ]
+Below MaisonAtelierShowcase (still above the existing site footer if any, or replacing it), render only the plain footer copy the user pasted earlier — no fancy layout, just the text blocks:
 
-   ┌─────┐    ┌─────┐    ┌─────┐    ┌─────┐
-   │ img │    │ img │    │ img │    │ img │     ← 4 tan rounded rectangles
-   │  1  │    │  2  │    │  3  │    │  4  │       (aspect 3/4, tan #C9A87A-ish)
-   └──▼──┘    └──▼──┘    └──▼──┘    └──▼──┘     ← models overflow bottom edge,
-     sit         sit        sit        sit        casting a soft ground shadow
+```
+Maison
+Modern couture crafted in limited series...
 
-                        Maison            ← script/serif wordmark
-                       — couture —         ← thin eyebrow under it
+Shop: New Arrivals / Women / Men / Collections
+Client Services: Shipping / Returns / Size Guide / Care
+Newsletter: Private invitations... [Join →]
 
-           Welcome to couture that doesn't
-             just dress you, it defines you.
+© 2026 Clothing Store — All rights reserved.  Privacy  Terms
 ```
 
-Key visual details to match the reference:
-- Background: warm champagne gradient (reuses `--cream` / `--champagne` tokens) with a subtle radial vignette.
-- 4 equal tiles, `aspect-[3/4]`, `rounded-[6px]`, solid tan fill (`bg-champagne/70`), thin inset shadow.
-- Model images sit *inside* each tile but the figure extends ~15–20% below the tile's bottom edge (negative margin on the `<img>`, `object-cover object-top`, tile has `overflow-visible`).
-- Each model gets a soft elliptical drop-shadow on the "floor" below the tile (blurred radial div) so they feel grounded.
-- Row of tiles horizontally centered, gap-6, max-width ~1200px. On mobile: 2×2 grid.
-- Below the tiles: centered "Maison" wordmark in `font-display` italic + a hairline `— couture —` eyebrow, then the two-line tagline in warm-gray.
+Keep it minimal, serif headings, hairline dividers, cream background — matching the site's existing luxury tone.
 
-### Motion (Framer Motion + Reveal)
-- Each tile fades + rises in staggered (0.1s apart) on scroll-into-view via existing `<Reveal>`.
-- Each model image has a very slow idle float (`y: [0, -4, 0]`, 6s, staggered) so the group feels alive but calm.
-- Wordmark uses a mask reveal similar to other sections.
+### 3. Mount
 
-### Images
+In `src/routes/index.tsx`, ensure the order stays: … → CampaignQuote → MaisonAtelierShowcase → Footer.
 
-Need 4 editorial portraits where the subject is full-body and can visually "sit" on the tile edge. Reuse existing atelier assets that already show seated / relaxed full-body poses:
-- `atelier-new-2.jpeg` (tailored beige suit)
-- `atelier-new-3.jpeg` (linen shirt + chinos)
-- `atelier-new-7.jpeg` (ivory sherwani portrait)
-- `atelier-new-8.jpeg` (ivory sherwani + brocade)
+### Technical notes
 
-If any of these don't crop convincingly as "seated on ledge", swap to another `atelier-new-*` asset — no new uploads or AI generation.
-
-### Footer
-
-No changes. The existing `SiteFooter` (rendered by `SiteChrome`) already contains the exact copy the user listed (Maison / Shop / Client Services / Newsletter / © 2026 / Privacy / Terms), so it stays as-is.
-
-### Files touched
-- Add: `src/components/home/MaisonAtelierShowcase.tsx`
-- Edit: `src/routes/index.tsx` (import + mount above footer, after CampaignQuote)
-
-No backend, styles.css, or footer changes.
+- Tailwind arbitrary color values for the beige/tan wall tones (or add tokens to `styles.css` if reused).
+- `filter: drop-shadow(0 30px 20px rgba(0,0,0,0.25))` on model images for the wall shadow.
+- Niches use `box-shadow: inset` for recessed depth.
+- Responsive: stack niches 2×2 on mobile.
