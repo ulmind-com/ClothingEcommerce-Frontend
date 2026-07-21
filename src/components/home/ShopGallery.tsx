@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
@@ -106,7 +106,7 @@ const FILTERS: {
   key: FilterKey;
   label: string;
   match: string[];
-  Icon: (p: { className?: string }) => JSX.Element;
+  Icon: (p: { className?: string }) => ReactNode;
 }[] = [
   { key: "all", label: "All", match: [], Icon: ({ className }) => <LayoutGrid className={className} strokeWidth={1.6} /> },
   { key: "dresses", label: "Dresses", match: ["dress", "gown", "lehenga", "saree", "sari"], Icon: DressIcon },
