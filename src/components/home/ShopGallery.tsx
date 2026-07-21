@@ -140,10 +140,10 @@ const PILL_FALLBACK_IMAGES = [
 ];
 
 const PILL_GRADIENTS = [
-  "from-[oklch(0.74_0.15_28)] to-[oklch(0.68_0.17_18)]",
-  "from-[oklch(0.72_0.19_5)] to-[oklch(0.62_0.21_350)]",
-  "from-[oklch(0.72_0.16_22)] to-[oklch(0.66_0.19_10)]",
-  "from-[oklch(0.68_0.19_5)] to-[oklch(0.60_0.20_345)]",
+  "from-[oklch(0.82_0.09_80)] to-[oklch(0.74_0.12_78)]",
+  "from-[oklch(0.84_0.08_82)] to-[oklch(0.76_0.11_80)]",
+  "from-[oklch(0.80_0.10_78)] to-[oklch(0.72_0.13_76)]",
+  "from-[oklch(0.83_0.09_81)] to-[oklch(0.75_0.12_79)]",
 ];
 
 export function ShopGallery() {
