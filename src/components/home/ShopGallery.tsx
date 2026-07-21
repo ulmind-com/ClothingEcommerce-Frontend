@@ -348,7 +348,7 @@ export function ShopGallery() {
                           e.stopPropagation();
                           onAddToCart(p);
                         }}
-                        className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-rose text-cream py-2.5 text-sm font-medium hover:brightness-105 active:scale-[0.99] transition"
+                        className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-gold text-cream py-2.5 text-sm font-medium hover:brightness-105 active:scale-[0.99] transition"
                       >
                         <ShoppingBag className="h-4 w-4" strokeWidth={1.75} />
                         Add to Cart
