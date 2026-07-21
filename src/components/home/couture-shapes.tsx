@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 const float = (dur = 6, y = 10, r = 0) => ({
   animate: { y: [0, -y, 0], rotate: [0, r, 0] },
-  transition: { duration: dur, repeat: Infinity, ease: "easeInOut" },
+  transition: { duration: dur, repeat: Infinity, ease: "easeInOut" as const },
 });
 
 export function Sparkle({ className, color = "#EC4E9C" }: { className?: string; color?: string }) {
