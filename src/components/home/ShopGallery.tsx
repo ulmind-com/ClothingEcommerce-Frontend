@@ -281,7 +281,7 @@ export function ShopGallery() {
                   onMouseLeave={() => setActiveCard(null)}
                   className={`group relative rounded-3xl bg-cream overflow-hidden transition-shadow duration-500 ${
                     isActive
-                      ? "ring-2 ring-rose shadow-[0_25px_60px_-30px_rgba(220,50,80,0.55)]"
+                      ? "ring-2 ring-gold shadow-[0_25px_60px_-30px_rgba(190,140,50,0.55)]"
                       : "ring-1 ring-ink/5 shadow-[0_10px_30px_-20px_rgba(0,0,0,0.15)]"
                   }`}
                 >
