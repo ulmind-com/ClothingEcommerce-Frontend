@@ -315,23 +315,23 @@ export function ShopGallery() {
                   </Link>
                   <div className="px-4 pt-3 pb-4">
                     <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
-                        <div className="text-sm font-medium text-ink truncate">
-                          {p.title}
+                        <div className="min-w-0">
+                          <div className="text-sm font-medium text-ink truncate">
+                            {p.title}
+                          </div>
+                          <div className="mt-1 text-gold font-semibold">
+                            {formatPrice(p.price)}
+                          </div>
                         </div>
-                        <div className="mt-1 text-rose font-semibold">
-                          {formatPrice(p.price)}
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        aria-label="Save to wishlist"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                        }}
-                        className="shrink-0 grid place-items-center h-8 w-8 rounded-full text-ink/50 hover:text-rose transition-colors"
-                      >
+                        <button
+                          type="button"
+                          aria-label="Save to wishlist"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
+                          className="shrink-0 grid place-items-center h-8 w-8 rounded-full text-ink/50 hover:text-gold transition-colors"
+                        >
                         <Heart className="h-4 w-4" strokeWidth={1.5} />
                       </button>
                     </div>
