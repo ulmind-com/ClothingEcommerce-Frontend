@@ -200,7 +200,7 @@ export function ShopGallery() {
   if (products.length === 0 && categories.length === 0) return null;
 
   return (
-    <section className="relative w-full bg-blush-soft py-14 md:py-20">
+    <section className="relative w-full bg-gold-soft py-14 md:py-20">
       <div className="mx-auto max-w-[1400px] px-4 md:px-8">
         {/* Pill category banners */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
