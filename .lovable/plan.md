@@ -1,51 +1,53 @@
-## Editorial Spotlight (below Maison Runway) — 1:1 with the reference video
+## Atelier Stories — tilted photo marquee below Editorial Spotlight
 
-Mount a new backend-driven section right under `RunwayLookbook` in `src/routes/index.tsx`. Same interaction beats and same on-screen elements as the video: a compact "hero product" state that expands into a full product detail state when the ADD button is pressed, then collapses back — with auto-play through products.
+A new editorial section styled after the BrandLyft reference, mounted directly under `EditorialSpotlight` in `src/routes/index.tsx`. Big serif headline, hand-drawn arrow motifs on either side, a small centered CTA pill, and a horizontal row of gently **tilted portrait photo cards** that auto-scroll left→right forever, smooth and premium.
 
-### The two states (exactly like the video)
+### Layout (1:1 with reference vibe, tuned to Maison)
 
-State A — Collapsed hero card
-- Left column: bold display title of the product ("TIED GREEN V-NECK SHIRT" in the ref), socials row pinned bottom-left.
-- Center: model cutout on a large pastel circular halo; small hand-drawn motifs (squiggles, sparkles, arcs, dotted lines) floating around with parallax + idle drift.
-- Floating cross-sell mini-cards over the model (image + name + price), same as the bag/sandals in the ref.
-- Right column: vertical rotated season label ("SUMMER 2026") next to a slim sister-look image strip; `SIZE GUIDE ˄` pinned bottom-right.
-- Big circular ADD/`+` button dead-center over the model.
+```text
+                      ﹏ kicker: "The Atelier Journal"
+       ~/          Threads of a Living Heritage          \~
+                a short editorial line, 2 lines max
+                          [ Explore the House ]
 
-State B — Expanded product detail (after clicking ADD)
-- Cross-sell cards + right sister strip fade out.
-- Left column morphs to: title, price, short description, `SELECT SIZE` row (S / M / L chips), `SIZE GUIDE` link, then a horizontal row of 4 alt-image thumbnails with a `›` next arrow.
-- Right column morphs to a vertical `01 / 05` counter with the thin progress rule.
-- Model image swaps to the next look (in the ref the model turns around) — we cycle `productImage(p, i)` alt shots.
-- A `close/back` affordance (the same center button becomes `−`) collapses back to State A.
+  ⤺  [img]  [img]  [img]  [img]  [img]  [img]  [img]  [img]  ⤻
+        tilt -6°  +4°  -3°  +5°  -4°  +6°  -5°  +3°  (alternating)
+```
 
-Auto behavior
-- Autoplay: cycles through products every ~7s; pauses on hover/focus/expand.
-- Expanded state auto-collapses after ~5s if the user doesn't interact, then advances.
-- Prev/next arrows on the sides for manual control; keyboard ←/→ supported.
-- Reduced-motion: no halo pulse, no motif drift, instant state swaps.
+- Backdrop: warm cream with subtle grain; soft radial vignette at edges so cards fade in/out of the marquee.
+- Each card: portrait 3:4, rounded-2xl, hairline ink border, soft champagne shadow, small alternating tilt.
+- Two hand-drawn SVG arrow/squiggle motifs flanking the headline (reuse existing `signature-motifs.tsx` primitives — no new asset system).
+- Centered pill CTA below the copy: `Explore the House →` linking to `/shop`.
 
-### Motion (Framer Motion + a light GSAP timeline)
+### Images (8 total)
 
-- State transition: shared-layout morph. Left column uses `AnimatePresence mode="wait"` between `TitleOnly` and `TitleWithMeta` variants; cross-sell cards use `layout` + `y/opacity` exit; right sister strip slides out to the right, counter fades in from the right.
-- Halo: continuous slow rotation + scale breathing; on state-change it briefly pulses (scale 1 → 1.04 → 1) and shifts hue to the active product's dominant color.
-- Motifs (`signature-motifs.tsx` reused): each SVG has its own float loop (`y`, `rotate`, `opacity`), staggered.
-- Model: `AnimatePresence` crossfade between alt images; subtle mouse-parallax translate on the wrapper (disabled on touch).
-- ADD button: hover magnetic pull + inner label crossfade (`ADD` ⇄ `−`); click ripples a champagne ring outward.
-- Counter: numbers flip with `y` slide; progress bar animates from 0→100% over the autoplay interval.
+- Use the 2 user uploads as-is via `lovable-assets create --file /mnt/user-uploads/... ` → JSON pointers in `src/assets/atelier-*.asset.json`:
+  - `user-uploads://Jewellery.jpeg`
+  - `user-uploads://Because_every_thread_tells_your_story_🧵💖_Unfold_your_fairytale_in_our_exclusive_bridal_designs.jpeg`
+- Generate 6 more editorial portraits with `imagegen` (fast tier, 3:4 portrait, saved to `src/assets/atelier-3.jpg` … `atelier-8.jpg`), each a distinct Maison moment:
+  1. Bride in ivory lehenga, temple light
+  2. Groom in charcoal bandhgala, moody studio
+  3. Detail: hands with gold bangles + embroidered dupatta
+  4. Modern fusion — woman in sculpted saree gown, editorial pose
+  5. Couple in coordinated pastel wedding wear, soft daylight
+  6. Close-up of hand embroidery on silk, artisan hands in frame
+- No text overlays on any card — pure imagery.
 
-### Data (uses existing backend only)
+### Motion (ultra-premium)
 
-- Reuses `productsOptions({ limit: 8 })` from `src/lib/api/queries.ts` — no schema, no new endpoints, no admin change.
-- `productImage(p, i)` gives the model + alt shots; `p.colors[0]` supplies the halo tint; cross-sell picks the next 2 products in the list; sister strip picks `products[index+3]`.
-- Sizes come from `p.colors[0].sizes` when present, otherwise fall back to `["S","M","L"]` (display only, no cart writes here).
+- Infinite marquee via CSS keyframes (same pattern already proven in `src/styles.css` for `reel-marquee`, add new `atelier-marquee` at ~55s per full loop) — hardware-accelerated `translate3d`, seamless by rendering the card list twice back-to-back.
+- Pause on hover of the strip; individual card hover: lifts (`y: -6px`), tilt straightens toward 0°, champagne glow intensifies, image scales 1.04 over 900ms ease-out.
+- Headline + kicker + CTA: Framer Motion `Reveal` stagger on scroll-in (reuse existing `Reveal`).
+- Motif arrows: slow idle float (existing motif animation pattern).
+- Reduced-motion: marquee freezes, cards static at 0° tilt, no hover scale.
 
 ### Files
 
-- Add `src/components/home/EditorialSpotlight.tsx` — the whole section.
-- Reuse `src/components/home/signature-motifs.tsx` (already in project) for the floating SVGs.
-- Edit `src/routes/index.tsx` — import and mount `<EditorialSpotlight />` directly under `<RunwayLookbook />`.
-- No CSS token changes required; uses existing `cream / ink / champagne / rose / mint` tokens for the halo palette.
+- Add `src/components/home/AtelierStories.tsx` — the whole section.
+- Add `src/assets/atelier-1.jpeg.asset.json` … `atelier-2.jpeg.asset.json` (from uploads) and `atelier-3.jpg` … `atelier-8.jpg` (generated).
+- Append `@keyframes atelier-marquee` + `.animate-atelier-marquee` utility to `src/styles.css`.
+- Edit `src/routes/index.tsx` — import and mount `<AtelierStories />` directly under `<EditorialSpotlight />`.
 
 ### Not touched
 
-- No backend, no admin, no schema, no other sections, no cart mutations.
+- No backend, no admin panel, no schema, no new endpoints, no other sections. Purely a presentation-layer editorial strip using local assets.
