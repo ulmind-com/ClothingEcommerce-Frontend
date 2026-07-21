@@ -140,10 +140,10 @@ const PILL_FALLBACK_IMAGES = [
 ];
 
 const PILL_GRADIENTS = [
-  "from-[oklch(0.74_0.15_28)] to-[oklch(0.68_0.17_18)]",
-  "from-[oklch(0.72_0.19_5)] to-[oklch(0.62_0.21_350)]",
-  "from-[oklch(0.72_0.16_22)] to-[oklch(0.66_0.19_10)]",
-  "from-[oklch(0.68_0.19_5)] to-[oklch(0.60_0.20_345)]",
+  "from-[oklch(0.82_0.09_80)] to-[oklch(0.74_0.12_78)]",
+  "from-[oklch(0.84_0.08_82)] to-[oklch(0.76_0.11_80)]",
+  "from-[oklch(0.80_0.10_78)] to-[oklch(0.72_0.13_76)]",
+  "from-[oklch(0.83_0.09_81)] to-[oklch(0.75_0.12_79)]",
 ];
 
 export function ShopGallery() {
@@ -200,7 +200,7 @@ export function ShopGallery() {
   if (products.length === 0 && categories.length === 0) return null;
 
   return (
-    <section className="relative w-full bg-blush-soft py-14 md:py-20">
+    <section className="relative w-full bg-gold-soft py-14 md:py-20">
       <div className="mx-auto max-w-[1400px] px-4 md:px-8">
         {/* Pill category banners */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -209,7 +209,7 @@ export function ShopGallery() {
               <Link
                 to="/shop"
                 search={tile.categoryId ? { category: tile.categoryId } : {}}
-                className={`group relative flex items-center gap-3 rounded-full overflow-hidden pl-2 pr-4 md:pr-5 h-20 md:h-24 bg-gradient-to-r ${tile.gradient} text-cream shadow-[0_10px_30px_-15px_rgba(220,50,80,0.45)] transition-transform duration-500 hover:-translate-y-0.5`}
+                className={`group relative flex items-center gap-3 rounded-full overflow-hidden pl-2 pr-4 md:pr-5 h-20 md:h-24 bg-gradient-to-r ${tile.gradient} text-cream shadow-[0_10px_30px_-15px_rgba(190,140,50,0.45)] transition-transform duration-500 hover:-translate-y-0.5`}
               >
                 <div className="relative h-16 md:h-20 w-16 md:w-20 shrink-0 rounded-full overflow-hidden ring-2 ring-cream/40 bg-cream/20">
                   {tile.image ? (
@@ -244,13 +244,13 @@ export function ShopGallery() {
                   type="button"
                   onClick={() => setFilter(f.key)}
                   className={`group flex flex-col items-center gap-2 py-3 px-4 rounded-2xl transition-colors ${
-                    isActive ? "bg-blush" : "bg-transparent hover:bg-blush/60"
+                    isActive ? "bg-gold-muted" : "bg-transparent hover:bg-gold-muted/60"
                   }`}
                 >
-                  <f.Icon className={`h-9 w-9 ${isActive ? "text-rose" : "text-ink/80"}`} />
+                  <f.Icon className={`h-9 w-9 ${isActive ? "text-[oklch(0.72_0.13_76)]" : "text-ink/80"}`} />
                   <span
                     className={`text-xs md:text-sm font-medium tracking-wide ${
-                      isActive ? "text-rose" : "text-ink/80"
+                      isActive ? "text-[oklch(0.72_0.13_76)]" : "text-ink/80"
                     }`}
                   >
                     {f.label}
@@ -281,16 +281,16 @@ export function ShopGallery() {
                   onMouseLeave={() => setActiveCard(null)}
                   className={`group relative rounded-3xl bg-cream overflow-hidden transition-shadow duration-500 ${
                     isActive
-                      ? "ring-2 ring-rose shadow-[0_25px_60px_-30px_rgba(220,50,80,0.55)]"
+                      ? "ring-2 ring-gold shadow-[0_25px_60px_-30px_rgba(190,140,50,0.55)]"
                       : "ring-1 ring-ink/5 shadow-[0_10px_30px_-20px_rgba(0,0,0,0.15)]"
                   }`}
                 >
                   <Link to="/product/$id" params={{ id: p.id }} className="block">
-                    <div className="relative aspect-[4/5] bg-blush overflow-hidden">
+                    <div className="relative aspect-[4/5] bg-gold-soft overflow-hidden">
                       {/* badges */}
                       <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
                         {showHot && (
-                          <span className="px-2.5 py-0.5 text-[11px] font-medium rounded-full bg-rose text-cream shadow-sm">
+                          <span className="px-2.5 py-0.5 text-[11px] font-medium rounded-full bg-gold text-cream shadow-sm">
                             Hot
                           </span>
                         )}
@@ -309,29 +309,29 @@ export function ShopGallery() {
                           draggable={false}
                         />
                       ) : (
-                        <div className="h-full w-full bg-blush" />
+                        <div className="h-full w-full bg-gold-soft" />
                       )}
                     </div>
                   </Link>
                   <div className="px-4 pt-3 pb-4">
                     <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
-                        <div className="text-sm font-medium text-ink truncate">
-                          {p.title}
+                        <div className="min-w-0">
+                          <div className="text-sm font-medium text-ink truncate">
+                            {p.title}
+                          </div>
+                          <div className="mt-1 text-gold font-semibold">
+                            {formatPrice(p.price)}
+                          </div>
                         </div>
-                        <div className="mt-1 text-rose font-semibold">
-                          {formatPrice(p.price)}
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        aria-label="Save to wishlist"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                        }}
-                        className="shrink-0 grid place-items-center h-8 w-8 rounded-full text-ink/50 hover:text-rose transition-colors"
-                      >
+                        <button
+                          type="button"
+                          aria-label="Save to wishlist"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
+                          className="shrink-0 grid place-items-center h-8 w-8 rounded-full text-ink/50 hover:text-gold transition-colors"
+                        >
                         <Heart className="h-4 w-4" strokeWidth={1.5} />
                       </button>
                     </div>
@@ -348,7 +348,7 @@ export function ShopGallery() {
                           e.stopPropagation();
                           onAddToCart(p);
                         }}
-                        className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-rose text-cream py-2.5 text-sm font-medium hover:brightness-105 active:scale-[0.99] transition"
+                        className="w-full inline-flex items-center justify-center gap-2 rounded-full bg-gold text-cream py-2.5 text-sm font-medium hover:brightness-105 active:scale-[0.99] transition"
                       >
                         <ShoppingBag className="h-4 w-4" strokeWidth={1.75} />
                         Add to Cart
