@@ -8,6 +8,7 @@ import type {
   Review,
   ReviewSummary,
   Settings,
+  VideoItem,
 } from "@/types/api";
 
 export const qk = {
@@ -27,12 +28,26 @@ export const qk = {
   reviewSummary: (id: string) => ["reviews", "summary", id] as const,
   wishlistIds: ["wishlist", "ids"] as const,
   me: ["auth", "me"] as const,
+  videos: ["videos"] as const,
 };
 
 export const bannersOptions = () =>
   queryOptions({
     queryKey: qk.banners,
     queryFn: () => get<Banner[]>("/banners"),
+    staleTime: 60_000,
+  });
+
+export const videosOptions = () =>
+  queryOptions({
+    queryKey: qk.videos,
+    queryFn: async () => {
+      try {
+        return await get<VideoItem[]>("/videos");
+      } catch {
+        return [] as VideoItem[];
+      }
+    },
     staleTime: 60_000,
   });
 
