@@ -81,7 +81,7 @@ export interface ProductListParams {
 
 export const productsOptions = (params: ProductListParams = {}) =>
   queryOptions({
-    queryKey: qk.products(params),
+    queryKey: qk.products(params as Record<string, unknown>),
     queryFn: () => get<Product[]>("/products", { ...params }),
     staleTime: 30_000,
   });
