@@ -16,10 +16,14 @@ import { formatPrice } from "@/lib/utils/format";
 import { useCart } from "@/lib/cart/store";
 import { Reveal } from "@/lib/motion/Reveal";
 import type { Category, Product } from "@/types/api";
-import pillWomenGallery from "@/assets/pill-women-gallery.jpg";
-import pillChildrenFashion from "@/assets/pill-children-fashion.jpg";
-import pillMensFashion from "@/assets/pill-mens-fashion.jpg";
-import pillWomensFashion from "@/assets/pill-womens-fashion.jpg";
+import pillWomenGalleryAsset from "@/assets/pill-women-gallery.jpeg.asset.json";
+import pillChildrenFashionAsset from "@/assets/pill-children-fashion.jpeg.asset.json";
+import pillMensFashionAsset from "@/assets/pill-mens-fashion.jpeg.asset.json";
+import pillWomensFashionAsset from "@/assets/pill-womens-fashion.jpeg.asset.json";
+const pillWomenGallery = pillWomenGalleryAsset.url;
+const pillChildrenFashion = pillChildrenFashionAsset.url;
+const pillMensFashion = pillMensFashionAsset.url;
+const pillWomensFashion = pillWomensFashionAsset.url;
 
 // Jeans icon (lucide has no denim/jeans by default) — inline SVG matches stroke style.
 function JeansIcon({ className }: { className?: string }) {
