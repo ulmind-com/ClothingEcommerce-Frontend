@@ -49,6 +49,7 @@ export const Route = createFileRoute("/shop")({
 
 function ShopPage() {
   const search = Route.useSearch();
+  type ShopSearch = typeof search;
   const navigate = useNavigate({ from: Route.fullPath });
   const { data: categories = [] } = useQuery(categoriesOptions());
   const { data: settings } = useQuery(settingsOptions());
@@ -98,7 +99,7 @@ function ShopPage() {
           <div className="mb-8 flex flex-wrap items-center justify-between gap-4 border-y border-border py-4">
             <div className="flex flex-wrap items-center gap-2">
               <button
-                onClick={() => navigate({ to: ".", search: (p) => ({ ...p, category: undefined }) })}
+                onClick={() => navigate({ to: ".", search: (p: ShopSearch) => ({ ...p, category: undefined }) })}
                 className={`eyebrow px-3 py-1.5 transition-colors ${!search.category ? "bg-ink text-cream" : "hover:text-champagne"}`}
               >
                 All
@@ -107,7 +108,7 @@ function ShopPage() {
                 <button
                   key={c.id}
                   onClick={() =>
-                    navigate({ to: ".", search: (p) => ({ ...p, category: c.id }) })
+                    navigate({ to: ".", search: (p: ShopSearch) => ({ ...p, category: c.id }) })
                   }
                   className={`eyebrow px-3 py-1.5 transition-colors ${search.category === c.id ? "bg-ink text-cream" : "hover:text-champagne"}`}
                 >
@@ -123,7 +124,7 @@ function ShopPage() {
                   onChange={(e) =>
                     navigate({
                       to: ".",
-                      search: (p) => ({
+                      search: (p: ShopSearch) => ({
                         ...p,
                         inStock: e.target.checked || undefined,
                       }),
@@ -138,7 +139,7 @@ function ShopPage() {
                 onChange={(e) =>
                   navigate({
                     to: ".",
-                    search: (p) => ({
+                    search: (p: ShopSearch) => ({
                       ...p,
                       sort: e.target.value as typeof search.sort,
                     }),
