@@ -9,6 +9,13 @@ import { formatPrice } from "@/lib/utils/format";
 import type { Product } from "@/types/api";
 
 const AUTOPLAY_MS = 6000;
+const STAGE_SLOTS = [
+  { offset: -3, x: "8%", y: 26, width: 118, height: 370, opacity: 0.18, blur: 12, scale: 0.88, z: 1 },
+  { offset: -2, x: "18%", y: 18, width: 132, height: 405, opacity: 0.26, blur: 10, scale: 0.9, z: 2 },
+  { offset: -1, x: "31%", y: 8, width: 150, height: 455, opacity: 0.34, blur: 8, scale: 0.92, z: 3 },
+  { offset: 0, x: "61%", y: 0, width: 270, height: 635, opacity: 1, blur: 0, scale: 1, z: 8 },
+  { offset: 1, x: "86%", y: 34, width: 165, height: 470, opacity: 0.22, blur: 12, scale: 0.9, z: 2 },
+] as const;
 
 function hasImage(p: Product) {
   return !!productImage(p);
@@ -46,7 +53,11 @@ export function RunwayLookbook() {
   if (looks.length === 0) return null;
 
   const active = looks[index];
-  const shopTheLook = [1, 2, 3].map((o) => looks[(index + o) % looks.length]);
+  const stagedLooks = STAGE_SLOTS.map((slot) => ({
+    slot,
+    product: looks[(index + slot.offset + looks.length) % looks.length],
+  }));
+  const shopTheLook = [1, 2].map((o) => looks[(index + o) % looks.length]);
   const go = (dir: number) =>
     setIndex((i) => (i + dir + looks.length) % looks.length);
 
@@ -61,13 +72,14 @@ export function RunwayLookbook() {
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
-      className="relative w-full bg-secondary/50 silk-grain overflow-hidden min-h-[780px] md:min-h-[880px] py-16 md:py-24"
+      className="relative w-full bg-secondary/60 silk-grain overflow-hidden min-h-[780px] md:min-h-[880px] py-12 md:py-16"
       aria-label="Runway lookbook"
     >
+      <div className="absolute inset-x-0 top-0 h-px bg-ink/10" aria-hidden />
       {/* Top strip */}
-      <div className="mx-auto max-w-[1500px] px-6 md:px-10 flex items-center justify-between">
-        <div className="eyebrow text-ink/70">The Runway</div>
-        <div className="hidden md:flex items-center gap-8 eyebrow text-ink/40">
+      <div className="mx-auto max-w-[1500px] px-5 md:px-10 flex items-center justify-between">
+        <div className="eyebrow text-ink/70">Maison Runway</div>
+        <div className="hidden md:flex items-center gap-8 eyebrow text-ink/40" aria-hidden>
           <span className="text-ink/80">Runway</span>
           <span>The Maison</span>
           <span>Lookbook</span>
@@ -75,18 +87,18 @@ export function RunwayLookbook() {
       </div>
 
       {/* Main grid */}
-      <div className="relative mx-auto max-w-[1500px] px-6 md:px-10 mt-10 md:mt-14 grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-6 items-stretch">
+      <div className="relative mx-auto max-w-[1500px] px-5 md:px-10 mt-8 md:mt-10 grid grid-cols-1 md:grid-cols-12 gap-7 md:gap-5 items-stretch">
         {/* LEFT */}
-        <div className="md:col-span-3 flex flex-col justify-between min-h-[220px] md:min-h-[640px] relative">
+        <div className="md:col-span-3 flex flex-col justify-between min-h-[200px] md:min-h-[660px] relative z-20">
           <div>
             <div className="eyebrow text-ink/70 mb-4">Autumn / Winter 26</div>
-            <p className="text-sm text-warm-gray leading-relaxed max-w-xs">
+            <p className="text-sm text-warm-gray leading-relaxed max-w-[18rem]">
               Picture-perfect and hand-finished. Each look opens the season&apos;s
               atelier in miniature — the cut, the cloth, the finishings.
             </p>
           </div>
           <div className="mt-10 md:mt-0">
-            <div className="relative h-[92px] md:h-[110px] overflow-hidden">
+            <div className="relative h-[92px] md:h-[110px] overflow-visible">
               <AnimatePresence mode="popLayout" initial={false}>
                 <motion.div
                   key={lookNumber}
@@ -94,7 +106,7 @@ export function RunwayLookbook() {
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: reduce ? 0 : -40, opacity: 0 }}
                   transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                  className="font-display text-[64px] md:text-[92px] leading-none tracking-[-0.02em] text-ink"
+                  className="font-display text-[54px] md:text-[68px] xl:text-[78px] leading-none text-ink whitespace-nowrap"
                 >
                   LOOK {lookNumber}
                 </motion.div>
@@ -121,58 +133,88 @@ export function RunwayLookbook() {
 
         {/* CENTER STAGE */}
         <div className="md:col-span-6 relative">
-          <div className="relative h-[520px] md:h-[680px] overflow-hidden">
+          <div className="relative h-[500px] md:h-[660px] overflow-hidden">
             {/* pagination badge */}
-            <div className="absolute top-3 right-3 z-20 eyebrow text-ink/50">
+            <div className="absolute top-3 right-3 z-30 eyebrow text-ink/50">
               {lookNumber} <span className="text-ink/25">/ {totalNumber}</span>
             </div>
 
-            {/* runway strip */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <motion.div
-                className="flex items-end gap-6 md:gap-10 will-change-transform"
-                animate={{ x: `calc(50% - ${index * (260 + 40)}px - 130px)` }}
-                transition={{ type: "spring", stiffness: 120, damping: 22, mass: 0.9 }}
-              >
-                {looks.map((p, i) => {
-                  const dist = i - index;
-                  const isActive = dist === 0;
-                  const blur = isActive ? 0 : Math.min(Math.abs(dist) * 6, 14);
+            {/* staged runway composition */}
+            <div className="absolute inset-0">
+              <div className="absolute inset-x-6 md:inset-x-8 bottom-4 top-10 border-y border-ink/5" aria-hidden />
+              <AnimatePresence initial={false} mode="popLayout">
+                {stagedLooks.map(({ product: p, slot }) => {
+                  const isActive = slot.offset === 0;
+                  const isIncoming = slot.offset === 1;
+                  const img = productImage(p);
                   return (
                     <motion.div
-                      key={p.id}
-                      animate={{
-                        opacity: isActive ? 1 : 0.35,
-                        filter: reduce ? "none" : `blur(${blur}px) saturate(${isActive ? 1 : 0.5})`,
-                        scale: isActive ? 1 : 0.88,
-                        y: isActive ? 0 : 20,
+                      key={`${slot.offset}-${p.id}`}
+                      initial={{
+                        x: isIncoming ? "96%" : slot.x,
+                        y: slot.y + (reduce ? 0 : 18),
+                        opacity: 0,
+                        scale: slot.scale * 0.96,
+                        filter: reduce ? "none" : `blur(${slot.blur + 4}px) saturate(0.45)`,
                       }}
-                      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-                      className="relative shrink-0"
-                      style={{ width: 260 }}
+                      animate={{
+                        x: slot.x,
+                        y: slot.y,
+                        opacity: slot.opacity,
+                        scale: slot.scale,
+                        filter: reduce
+                          ? "none"
+                          : `blur(${slot.blur}px) saturate(${isActive ? 1.02 : 0.48})`,
+                      }}
+                      exit={{
+                        x: slot.offset < 0 ? "0%" : "48%",
+                        y: slot.y + (reduce ? 0 : 26),
+                        opacity: 0,
+                        scale: slot.scale * 0.9,
+                        filter: reduce ? "none" : "blur(16px) saturate(0.35)",
+                      }}
+                      transition={{ type: "spring", stiffness: 112, damping: 24, mass: 0.9 }}
+                      className="absolute bottom-5 left-0 will-change-transform"
+                      style={{ width: slot.width, zIndex: slot.z }}
                     >
                       <Link
                         to="/product/$id"
                         params={{ id: p.id }}
                         aria-label={p.title}
                         className="block relative"
+                        tabIndex={isActive ? 0 : -1}
                       >
-                        <div className="relative w-[260px] h-[560px] md:h-[620px] overflow-hidden">
-                          <img
-                            src={productImage(p)}
-                            alt={p.title}
-                            className="h-full w-full object-cover"
-                            draggable={false}
-                          />
+                        <motion.div
+                          className="relative overflow-hidden"
+                          animate={{
+                            width: slot.width,
+                            height: slot.height,
+                          }}
+                          transition={{ type: "spring", stiffness: 118, damping: 23 }}
+                        >
+                          {img ? (
+                            <img
+                              src={img}
+                              alt={p.title}
+                              className="h-full w-full object-cover"
+                              draggable={false}
+                              loading={isActive ? "eager" : "lazy"}
+                            />
+                          ) : null}
                           {isActive && (
-                            <div className="absolute inset-0 shadow-[0_40px_80px_-30px_rgba(0,0,0,0.35)] pointer-events-none" />
+                            <motion.div
+                              className="absolute inset-0 pointer-events-none"
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              style={{ boxShadow: "0 44px 90px -34px color-mix(in oklab, var(--ink) 46%, transparent)" }}
+                            />
                           )}
-                        </div>
+                        </motion.div>
                       </Link>
                     </motion.div>
                   );
                 })}
-              </motion.div>
+              </AnimatePresence>
             </div>
 
             {/* prev / next */}
@@ -180,7 +222,7 @@ export function RunwayLookbook() {
               type="button"
               aria-label="Previous look"
               onClick={() => go(-1)}
-              className="absolute left-3 top-1/2 -translate-y-1/2 z-20 grid place-items-center h-10 w-10 rounded-full border border-ink/25 text-ink/70 bg-cream/70 backdrop-blur-sm hover:bg-cream hover:text-ink hover:border-ink transition-all"
+              className="absolute left-3 top-1/2 -translate-y-1/2 z-30 grid place-items-center h-10 w-10 rounded-full border border-ink/25 text-ink/70 bg-cream/75 backdrop-blur-sm hover:bg-cream hover:text-ink hover:border-ink transition-all"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -188,7 +230,7 @@ export function RunwayLookbook() {
               type="button"
               aria-label="Next look"
               onClick={() => go(1)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 z-20 grid place-items-center h-10 w-10 rounded-full border border-ink/25 text-ink/70 bg-cream/70 backdrop-blur-sm hover:bg-cream hover:text-ink hover:border-ink transition-all"
+              className="absolute right-3 top-1/2 -translate-y-1/2 z-30 grid place-items-center h-10 w-10 rounded-full border border-ink/25 text-ink/70 bg-cream/75 backdrop-blur-sm hover:bg-cream hover:text-ink hover:border-ink transition-all"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
@@ -196,33 +238,22 @@ export function RunwayLookbook() {
         </div>
 
         {/* RIGHT — Shop the Look */}
-        <div className="md:col-span-3 relative">
-          <div className="flex flex-col gap-4">
+        <div className="md:col-span-3 relative z-20">
+          <div className="flex flex-col gap-4 md:pt-12">
             <AnimatePresence mode="popLayout" initial={false}>
-              {shopTheLook.slice(0, 2).map((p, i) => (
+              {shopTheLook.map((p, i) => (
                 <motion.div
                   key={`${index}-${p.id}`}
-                  initial={{ opacity: 0, y: reduce ? 0 : 16 }}
+                  initial={{ opacity: 0, y: reduce ? 0 : 28, scale: 0.98 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: reduce ? 0 : -16 }}
-                  transition={{ duration: 0.6, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                  exit={{ opacity: 0, y: reduce ? 0 : -28, scale: 0.98 }}
+                  transition={{ duration: 0.62, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
+                  layout
                 >
                   <ShopCard product={p} />
                 </motion.div>
               ))}
             </AnimatePresence>
-            {shopTheLook[2] && (
-              <motion.div
-                key={`peek-${index}-${shopTheLook[2].id}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 0.55, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.24 }}
-                className="pointer-events-none -mt-1"
-                aria-hidden
-              >
-                <ShopCard product={shopTheLook[2]} peek />
-              </motion.div>
-            )}
           </div>
         </div>
       </div>
@@ -230,15 +261,14 @@ export function RunwayLookbook() {
   );
 }
 
-function ShopCard({ product, peek = false }: { product: Product; peek?: boolean }) {
+function ShopCard({ product }: { product: Product }) {
   const img = productImage(product);
   return (
-    <div className="group relative bg-cream border border-border/60">
+    <div className="group relative bg-cream border border-border/70 shadow-[0_24px_60px_-44px_color-mix(in_oklab,var(--ink)_45%,transparent)]">
       <Link
         to="/product/$id"
         params={{ id: product.id }}
         className="block"
-        tabIndex={peek ? -1 : 0}
       >
         <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
           {img ? (
