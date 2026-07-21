@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { ChevronLeft, ChevronRight, Heart, Plus } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { productsOptions } from "@/lib/api/queries";
 import { productImage } from "@/lib/utils/product";
@@ -9,14 +9,14 @@ import { formatPrice } from "@/lib/utils/format";
 import type { Product } from "@/types/api";
 
 const AUTOPLAY_MS = 6000;
-// Bottom-aligned runway. All figures share the same ground line; scale +
-// transform-origin: bottom makes them stand together like the reference.
+// Reference (Marc Jacobs SS19): active look anchored right, trailing blurred
+// crowd receding to the left, nothing entering from the right.
 const STAGE_SLOTS = [
-  { offset: -3, x: "2%",  scale: 0.45, opacity: 0.22, blur: 22, saturate: 0.2, z: 1 },
-  { offset: -2, x: "12%", scale: 0.6,  opacity: 0.4,  blur: 14, saturate: 0.35, z: 2 },
-  { offset: -1, x: "26%", scale: 0.8,  opacity: 0.7,  blur: 6,  saturate: 0.6, z: 3 },
-  { offset:  0, x: "50%", scale: 1,    opacity: 1,    blur: 0,  saturate: 1,   z: 8 },
-  { offset:  1, x: "84%", scale: 0.85, opacity: 0.75, blur: 4,  saturate: 0.7, z: 2 },
+  { offset: -4, x: "6%",  scale: 0.35, opacity: 0.18, blur: 26, saturate: 0.15, z: 1 },
+  { offset: -3, x: "14%", scale: 0.45, opacity: 0.28, blur: 18, saturate: 0.2,  z: 2 },
+  { offset: -2, x: "26%", scale: 0.6,  opacity: 0.45, blur: 10, saturate: 0.35, z: 3 },
+  { offset: -1, x: "44%", scale: 0.85, opacity: 0.92, blur: 2,  saturate: 0.85, z: 5 },
+  { offset:  0, x: "72%", scale: 1,    opacity: 1,    blur: 0,  saturate: 1,    z: 8 },
 ] as const;
 
 const FIGURE_WIDTH = 320;   // base width of the sharp centered look
@@ -77,7 +77,7 @@ export function RunwayLookbook() {
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
-      className="relative w-full bg-secondary/60 silk-grain overflow-hidden min-h-[780px] md:min-h-[880px] py-12 md:py-16"
+      className="relative w-full bg-white overflow-hidden min-h-[780px] md:min-h-[880px] py-12 md:py-16"
       aria-label="Runway lookbook"
     >
       <div className="absolute inset-x-0 top-0 h-px bg-ink/10" aria-hidden />
@@ -149,13 +149,12 @@ export function RunwayLookbook() {
               <AnimatePresence initial={false} mode="popLayout">
                 {stagedLooks.map(({ product: p, slot }) => {
                   const isActive = slot.offset === 0;
-                  const isIncoming = slot.offset === 1;
                   const img = productImage(p);
                   return (
                     <motion.div
                       key={`${slot.offset}-${p.id}`}
                       initial={{
-                        left: isIncoming ? "96%" : slot.x,
+                        left: slot.offset === -4 ? "-6%" : slot.x,
                         opacity: 0,
                         scale: slot.scale * 0.96,
                         filter: reduce
@@ -171,7 +170,7 @@ export function RunwayLookbook() {
                           : `blur(${slot.blur}px) saturate(${slot.saturate})`,
                       }}
                       exit={{
-                        left: slot.offset < 0 ? "-4%" : "48%",
+                        left: "-8%",
                         opacity: 0,
                         scale: slot.scale * 0.9,
                         filter: reduce ? "none" : "blur(20px) saturate(0.2)",
@@ -198,7 +197,6 @@ export function RunwayLookbook() {
                             src={img}
                             alt={p.title}
                             className="h-full w-full object-contain object-bottom select-none"
-                            style={{ mixBlendMode: "multiply" }}
                             draggable={false}
                             loading={isActive ? "eager" : "lazy"}
                           />
@@ -257,29 +255,37 @@ export function RunwayLookbook() {
 function ShopCard({ product }: { product: Product }) {
   const img = productImage(product);
   return (
-    <div className="group relative bg-cream border border-border/70 shadow-[0_24px_60px_-44px_color-mix(in_oklab,var(--ink)_45%,transparent)]">
+    <div className="group relative border border-ink/15 bg-white">
+      <button
+        type="button"
+        aria-label="Save to wishlist"
+        className="absolute left-3 top-3 z-10 grid place-items-center h-7 w-7 rounded-full text-ink/60 hover:text-ink transition-colors"
+        onClick={(e) => e.preventDefault()}
+      >
+        <Heart className="h-4 w-4" strokeWidth={1.25} />
+      </button>
       <Link
         to="/product/$id"
         params={{ id: product.id }}
         className="block"
       >
-        <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
+        <div className="relative aspect-[3/4] overflow-hidden bg-white">
           {img ? (
             <img
               src={img}
               alt={product.title}
-              className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"
+              className="h-full w-full object-contain transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]"
               draggable={false}
             />
           ) : null}
         </div>
-        <div className="flex items-start justify-between gap-3 p-3">
+        <div className="flex items-start justify-between gap-3 px-3 py-3 border-t border-ink/10">
           <div className="min-w-0">
-            <div className="eyebrow text-[10px] text-ink/80 truncate">{product.title}</div>
-            <div className="mt-1 text-sm text-ink/80">{formatPrice(product.price)}</div>
+            <div className="eyebrow text-[10px] tracking-[0.18em] text-ink/70 truncate uppercase">{product.title}</div>
+            <div className="mt-1 text-sm text-ink/70">{formatPrice(product.price)}</div>
           </div>
-          <span className="mt-0.5 grid place-items-center h-7 w-7 rounded-full border border-ink/20 text-ink/60 group-hover:border-champagne group-hover:text-champagne transition-colors">
-            <Plus className="h-3.5 w-3.5" />
+          <span className="mt-0.5 grid place-items-center h-6 w-6 text-ink/50 group-hover:text-ink transition-colors">
+            <Plus className="h-4 w-4" strokeWidth={1.25} />
           </span>
         </div>
       </Link>
