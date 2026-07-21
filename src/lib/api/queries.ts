@@ -82,7 +82,7 @@ export interface ProductListParams {
 export const productsOptions = (params: ProductListParams = {}) =>
   queryOptions({
     queryKey: qk.products(params),
-    queryFn: () => get<Product[]>("/products", params),
+    queryFn: () => get<Product[]>("/products", { ...params }),
     staleTime: 30_000,
   });
 
@@ -117,7 +117,7 @@ export const productsInfiniteOptions = (
     queryKey: ["products", "infinite", params] as const,
     queryFn: ({ pageParam = 0 }) =>
       get<Product[]>("/products", {
-        ...params,
+        ...(params as Record<string, unknown>),
         limit: pageSize,
         skip: pageParam,
       }),
