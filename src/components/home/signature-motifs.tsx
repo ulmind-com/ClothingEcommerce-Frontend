@@ -2,7 +2,12 @@ import { motion } from "framer-motion";
 
 const float = (dur: number, delay = 0) => ({
   animate: { y: [0, -14, 0], rotate: [0, 6, 0] },
-  transition: { duration: dur, repeat: Infinity, ease: "easeInOut", delay },
+  transition: {
+    duration: dur,
+    repeat: Infinity,
+    ease: "easeInOut" as const,
+    delay,
+  },
 });
 
 export function Squiggle({ className = "" }: { className?: string }) {
