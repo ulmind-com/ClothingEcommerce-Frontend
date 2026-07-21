@@ -8,7 +8,7 @@ export function SiteFooter() {
   const shop = settings?.shop;
   const year = new Date().getFullYear();
   return (
-    <footer className="mt-24" style={{ backgroundColor: "#ecd6a6" }}>
+    <footer className="mt-24" style={{ backgroundColor: "#d9bc8b" }}>
       <div className="w-full">
         <img
           src={atelierFooter.url}
@@ -17,7 +17,7 @@ export function SiteFooter() {
           draggable={false}
         />
       </div>
-      <div className="text-ink" style={{ backgroundColor: "#ecd6a6" }}>
+      <div className="text-ink" style={{ backgroundColor: "#d9bc8b" }}>
         <div className="mx-auto max-w-[1400px] px-6 md:px-10 pt-16 pb-14 grid gap-12 md:grid-cols-4">
           <div className="md:col-span-1">
             <div className="font-display text-3xl tracking-[0.32em] uppercase text-ink">
