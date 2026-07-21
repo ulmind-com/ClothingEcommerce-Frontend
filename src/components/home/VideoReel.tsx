@@ -6,11 +6,34 @@ import { videosOptions } from "@/lib/api/queries";
 import { MaskReveal } from "@/lib/motion/Reveal";
 import type { VideoItem } from "@/types/api";
 
+const FALLBACK_VIDEOS: VideoItem[] = [
+  {
+    id: "fallback-1",
+    video_url:
+      "https://videos.pexels.com/video-files/5069959/5069959-uhd_2560_1440_25fps.mp4",
+    title: "Woven by hand",
+    subtitle: "A study in couture craft.",
+    order: 1,
+    active: true,
+  },
+  {
+    id: "fallback-2",
+    video_url:
+      "https://videos.pexels.com/video-files/3971359/3971359-uhd_2560_1440_25fps.mp4",
+    title: "The atelier at work",
+    subtitle: "Every stitch, a signature.",
+    order: 2,
+    active: true,
+  },
+];
+
 export function VideoReel() {
   const { data = [] } = useQuery(videosOptions());
-  const videos: VideoItem[] = data
+  const backendVideos: VideoItem[] = data
     .filter((v) => v.active && v.video_url)
     .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+  const videos: VideoItem[] =
+    backendVideos.length > 0 ? backendVideos : FALLBACK_VIDEOS;
 
   const [index, setIndex] = useState(0);
   const [muted, setMuted] = useState(true);
