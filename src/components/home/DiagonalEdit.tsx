@@ -11,7 +11,7 @@ import d5 from "@/assets/diagonal-5.jpeg.asset.json";
 import d6 from "@/assets/diagonal-6.jpeg.asset.json";
 import d7 from "@/assets/diagonal-7.jpeg.asset.json";
 
-const AUTOPLAY_MS = 4000;
+const AUTOPLAY_MS = 2600;
 
 const EDIT: { src: string; title: string; caption: string }[] = [
   { src: d1.url, title: "Mirror Bloom Lehenga", caption: "Hand-mirrored, garden-bloomed" },
@@ -30,17 +30,16 @@ export function DiagonalEdit() {
   );
 
   const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
   const reduce = useReducedMotion();
 
   useEffect(() => {
-    if (reduce || paused || items.length < 2) return;
+    if (reduce || items.length < 2) return;
     const id = window.setInterval(
       () => setIndex((i) => (i + 1) % items.length),
       AUTOPLAY_MS,
     );
     return () => window.clearInterval(id);
-  }, [reduce, paused, items.length]);
+  }, [reduce, items.length]);
 
   const active = EDIT[index];
 
@@ -48,8 +47,6 @@ export function DiagonalEdit() {
     <section
       aria-label="The Diagonal Edit"
       className="relative w-full overflow-hidden bg-cream text-ink py-24 md:py-32"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
     >
       <div className="mx-auto max-w-[1500px] px-5 md:px-10">
         <div className="flex flex-col items-center text-center">
@@ -68,18 +65,11 @@ export function DiagonalEdit() {
           </Reveal>
         </div>
 
-        <div
-          className="relative mt-16 md:mt-20 h-[560px] md:h-[720px]"
-          onFocus={() => setPaused(true)}
-          onBlur={() => setPaused(false)}
-        >
+        <div className="relative mt-16 md:mt-20 h-[560px] md:h-[720px]">
           <DiagonalCarousel
             items={items}
             activeIndex={index}
-            onActiveIndexChange={(i) => {
-              setPaused(true);
-              setIndex(i);
-            }}
+            onActiveIndexChange={(i) => setIndex(i)}
             loop
             slideSize={280}
             rotationStep={22}
