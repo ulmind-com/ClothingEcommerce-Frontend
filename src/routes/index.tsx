@@ -183,7 +183,7 @@ function Hero() {
             <LuxLink
               to="/shop"
               variant="outline"
-              className="bg-transparent text-cream border border-cream/60 backdrop-blur-sm hover:bg-cream/10 hover:border-cream"
+              className="bg-ink text-cream border border-cream/60 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)] hover:bg-cream/10 hover:border-cream"
             >
               Book an appointment
             </LuxLink>
