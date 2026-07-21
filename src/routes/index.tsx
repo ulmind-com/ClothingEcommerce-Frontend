@@ -19,6 +19,7 @@ import { productImage } from "@/lib/utils/product";
 import type { Category, HomeSection, Product } from "@/types/api";
 import heroBridal from "@/assets/hero-bridal.png.asset.json";
 import heroRedBride from "@/assets/hero-red-bride.png.asset.json";
+import heroColorEditorial from "@/assets/hero-color-editorial.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
