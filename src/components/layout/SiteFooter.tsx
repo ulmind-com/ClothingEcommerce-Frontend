@@ -8,8 +8,16 @@ export function SiteFooter() {
   const shop = settings?.shop;
   const year = new Date().getFullYear();
   return (
-    <footer className="mt-24" style={{ backgroundColor: "#d9bc8b" }}>
-      <div className="w-full">
+    <footer style={{ backgroundColor: "#d9bc8b" }}>
+      <div
+        aria-hidden
+        className="h-24 md:h-32 w-full"
+        style={{
+          background:
+            "linear-gradient(to bottom, var(--color-cream, #f5f0e8) 0%, #e8d0a0 60%, #d9bc8b 100%)",
+        }}
+      />
+      <div className="w-full -mt-px">
         <img
           src={atelierFooter.url}
           alt="Maison atelier — four models in recessed niches"
@@ -18,7 +26,7 @@ export function SiteFooter() {
         />
       </div>
       <div className="text-ink" style={{ backgroundColor: "#d9bc8b" }}>
-        <div className="mx-auto max-w-[1400px] px-6 md:px-10 pt-2 pb-10 grid gap-10 md:grid-cols-4">
+        <div className="mx-auto max-w-[1400px] px-6 md:px-10 pt-0 pb-10 -mt-8 md:-mt-16 grid gap-8 md:grid-cols-4">
           <div className="md:col-span-1">
             <div className="font-display text-3xl tracking-[0.32em] uppercase text-ink">
               Maison
