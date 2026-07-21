@@ -19,9 +19,9 @@ import atelier2 from "@/assets/atelier-2.jpeg.asset.json";
 
 export function CoutureSimplicity() {
   const { data: products = [] } = useQuery(productsOptions({ limit: 12 }));
-  const main = productImage(products[0]!) || atelier1.url;
-  const inset1 = productImage(products[1]!) || atelier2.url;
-  const inset2 = productImage(products[2]!) || atelier1.url;
+  const main = (products[0] && productImage(products[0])) || atelier1.url;
+  const inset1 = (products[1] && productImage(products[1])) || atelier2.url;
+  const inset2 = (products[2] && productImage(products[2])) || atelier1.url;
 
   return (
     <section className="relative overflow-hidden bg-[#F7F1E4] py-20 md:py-28">
