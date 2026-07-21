@@ -309,7 +309,7 @@ export function ShopGallery() {
                           draggable={false}
                         />
                       ) : (
-                        <div className="h-full w-full bg-blush" />
+                        <div className="h-full w-full bg-gold-soft" />
                       )}
                     </div>
                   </Link>
