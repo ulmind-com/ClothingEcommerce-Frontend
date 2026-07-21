@@ -18,6 +18,7 @@ import { MaskReveal, Reveal } from "@/lib/motion/Reveal";
 import { productImage } from "@/lib/utils/product";
 import type { Category, HomeSection, Product } from "@/types/api";
 import heroBridal from "@/assets/hero-bridal.png.asset.json";
+import heroRedBride from "@/assets/hero-red-bride.png.asset.json";
 
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
@@ -61,6 +62,13 @@ function Hero() {
       subtitle:
         "Ateliers in Milan, cutting rooms in Kolkata. A limited series shaped by hand for the season ahead.",
       code: "Autumn / Winter 26",
+    },
+    {
+      image: heroRedBride.url,
+      title: "The Bride, in crimson stillness.",
+      subtitle:
+        "A bridal chapter drawn in scarlet lace and hand-set stones — an heirloom in the making.",
+      code: "Bridal Couture",
     },
   ];
 
