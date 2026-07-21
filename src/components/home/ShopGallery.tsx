@@ -16,6 +16,10 @@ import { formatPrice } from "@/lib/utils/format";
 import { useCart } from "@/lib/cart/store";
 import { Reveal } from "@/lib/motion/Reveal";
 import type { Category, Product } from "@/types/api";
+import pillWomenGallery from "@/assets/pill-women-gallery.jpg";
+import pillChildrenFashion from "@/assets/pill-children-fashion.jpg";
+import pillMensFashion from "@/assets/pill-mens-fashion.jpg";
+import pillWomensFashion from "@/assets/pill-womens-fashion.jpg";
 
 // Jeans icon (lucide has no denim/jeans by default) — inline SVG matches stroke style.
 function JeansIcon({ className }: { className?: string }) {
@@ -124,6 +128,13 @@ const PILL_LABELS = [
   "Women's Fashion",
 ];
 
+const PILL_FALLBACK_IMAGES = [
+  pillWomenGallery,
+  pillChildrenFashion,
+  pillMensFashion,
+  pillWomensFashion,
+];
+
 const PILL_GRADIENTS = [
   "from-[oklch(0.74_0.15_28)] to-[oklch(0.68_0.17_18)]",
   "from-[oklch(0.72_0.19_5)] to-[oklch(0.62_0.21_350)]",
@@ -143,7 +154,7 @@ export function ShopGallery() {
       const cat = categories[i] as Category | undefined;
       return {
         label: cat?.name ?? label,
-        image: cat?.image ?? undefined,
+        image: cat?.image ?? PILL_FALLBACK_IMAGES[i],
         categoryId: cat?.id,
         gradient: PILL_GRADIENTS[i % PILL_GRADIENTS.length],
       };
@@ -158,14 +169,14 @@ export function ShopGallery() {
   }, [categories]);
 
   const filtered = useMemo(() => {
-    if (filter === "all") return products.slice(0, 8);
+    if (filter === "all") return products.slice(0, 4);
     const spec = FILTERS.find((f) => f.key === filter)!;
     const matched = products.filter((p) => {
       const catName = p.category_id ? categoryById.get(p.category_id)?.name ?? "" : "";
       const haystack = `${p.title} ${catName}`.toLowerCase();
       return spec.match.some((m) => haystack.includes(m));
     });
-    return (matched.length ? matched : products).slice(0, 8);
+    return (matched.length ? matched : products).slice(0, 4);
   }, [filter, products, categoryById]);
 
   // Middle-ish card is highlighted like the reference
