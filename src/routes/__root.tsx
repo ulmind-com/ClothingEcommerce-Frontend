@@ -11,6 +11,8 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { LenisProvider } from "../lib/motion/LenisProvider";
+import { Toaster } from "react-hot-toast";
 
 function NotFoundComponent() {
   return (
@@ -77,14 +79,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Maison — Modern Couture" },
+      {
+        name: "description",
+        content:
+          "Maison — a single-vendor luxury fashion house. Modern couture, editorial campaigns, and limited-series clothing.",
+      },
+      { property: "og:site_name", content: "Maison" },
+      { property: "og:title", content: "Maison — Modern Couture" },
+      {
+        property: "og:description",
+        content: "Modern couture, editorial campaigns, and limited-series clothing.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
@@ -92,6 +100,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,400&family=Inter+Tight:wght@300;400;500;600&display=swap",
+      },
     ],
   }),
   shellComponent: RootShell,
@@ -119,8 +133,23 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <LenisProvider>
+        <Outlet />
+        <Toaster
+          position="bottom-center"
+          toastOptions={{
+            style: {
+              background: "oklch(0.16 0.005 60)",
+              color: "oklch(0.965 0.012 85)",
+              borderRadius: 0,
+              fontSize: "0.75rem",
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              padding: "14px 20px",
+            },
+          }}
+        />
+      </LenisProvider>
     </QueryClientProvider>
   );
 }
