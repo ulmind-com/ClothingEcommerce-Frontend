@@ -8,7 +8,7 @@ import { productImage } from "@/lib/utils/product";
 import { formatPrice } from "@/lib/utils/format";
 import type { Product } from "@/types/api";
 
-const AUTOPLAY_MS = 6000;
+const AUTOPLAY_MS = 3200;
 // Reference (Marc Jacobs SS19): active look anchored right, trailing blurred
 // crowd receding to the left, nothing entering from the right.
 const STAGE_SLOTS = [
