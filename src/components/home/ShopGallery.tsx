@@ -244,13 +244,13 @@ export function ShopGallery() {
                   type="button"
                   onClick={() => setFilter(f.key)}
                   className={`group flex flex-col items-center gap-2 py-3 px-4 rounded-2xl transition-colors ${
-                    isActive ? "bg-blush" : "bg-transparent hover:bg-blush/60"
+                    isActive ? "bg-gold-muted" : "bg-transparent hover:bg-gold-muted/60"
                   }`}
                 >
-                  <f.Icon className={`h-9 w-9 ${isActive ? "text-rose" : "text-ink/80"}`} />
+                  <f.Icon className={`h-9 w-9 ${isActive ? "text-[oklch(0.72_0.13_76)]" : "text-ink/80"}`} />
                   <span
                     className={`text-xs md:text-sm font-medium tracking-wide ${
-                      isActive ? "text-rose" : "text-ink/80"
+                      isActive ? "text-[oklch(0.72_0.13_76)]" : "text-ink/80"
                     }`}
                   >
                     {f.label}
