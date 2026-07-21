@@ -286,11 +286,11 @@ export function ShopGallery() {
                   }`}
                 >
                   <Link to="/product/$id" params={{ id: p.id }} className="block">
-                    <div className="relative aspect-[4/5] bg-blush overflow-hidden">
+                    <div className="relative aspect-[4/5] bg-gold-soft overflow-hidden">
                       {/* badges */}
                       <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
                         {showHot && (
-                          <span className="px-2.5 py-0.5 text-[11px] font-medium rounded-full bg-rose text-cream shadow-sm">
+                          <span className="px-2.5 py-0.5 text-[11px] font-medium rounded-full bg-gold text-cream shadow-sm">
                             Hot
                           </span>
                         )}
