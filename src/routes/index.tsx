@@ -20,6 +20,10 @@ import type { Category, HomeSection, Product } from "@/types/api";
 import heroBridal from "@/assets/hero-bridal.png.asset.json";
 import heroRedBride from "@/assets/hero-red-bride.png.asset.json";
 import heroColorEditorial from "@/assets/hero-color-editorial.jpg.asset.json";
+import catLehenga from "@/assets/cat-lehenga.jpeg.asset.json";
+import catFusion from "@/assets/cat-fusion.jpeg.asset.json";
+import catSherwani from "@/assets/cat-sherwani.jpeg.asset.json";
+import catSaree from "@/assets/cat-saree.jpeg.asset.json";
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
     await Promise.all([
@@ -233,8 +237,17 @@ function Hero() {
 
 function CategoriesBento() {
   const { data: categories = [] } = useQuery(categoriesOptions());
-  const roots = categories.filter((c: Category) => !c.parent_id && c.image).slice(0, 4);
-  if (roots.length === 0) return null;
+  const curatedTiles = [
+    { label: "Lehenga", image: catLehenga.url, match: ["lehenga"] },
+    { label: "Fusion Wear", image: catFusion.url, match: ["fusion"] },
+    { label: "Sherwanis", image: catSherwani.url, match: ["sherwani", "men"] },
+    { label: "Sarees", image: catSaree.url, match: ["saree", "sari"] },
+  ].map((tile) => {
+    const cat = categories.find((c: Category) =>
+      tile.match.some((m) => c.name?.toLowerCase().includes(m))
+    );
+    return { ...tile, categoryId: cat?.id };
+  });
   return (
     <section className="py-24 md:py-32">
       <div className="mx-auto max-w-[900px] px-6 text-center mb-14 md:mb-20">
@@ -248,22 +261,21 @@ function CategoriesBento() {
         </p>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 px-4 md:px-6">
-        {roots.map((c, i) => (
-          <Reveal key={c.id} delay={i}>
+        {curatedTiles.map((tile, i) => (
+          <Reveal key={tile.label} delay={i}>
             <Link
               to="/shop"
-              search={{ category: c.id }}
+              search={tile.categoryId ? { category: tile.categoryId } : {}}
               className="group relative block aspect-[3/5] overflow-hidden bg-secondary"
             >
               <img
-                src={c.image!}
-                alt={c.name}
+                src={tile.image}
+                alt={tile.label}
                 className="h-full w-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-[1.06]"
-                style={{ transform: `scale(${c.image_scale ?? 1})` }}
               />
               <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-ink/90 via-ink/40 to-transparent pointer-events-none" />
               <div className="absolute inset-x-0 bottom-8 flex flex-col items-center text-cream">
-                <span className="eyebrow text-sm tracking-[0.35em]">{c.name}</span>
+                <span className="eyebrow text-sm tracking-[0.35em]">{tile.label}</span>
                 <span className="mt-3 block h-px w-0 bg-champagne transition-all duration-700 group-hover:w-10" />
               </div>
             </Link>
