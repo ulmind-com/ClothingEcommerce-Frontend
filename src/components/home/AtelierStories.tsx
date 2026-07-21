@@ -2,24 +2,24 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/lib/motion/Reveal";
-import atelier1 from "@/assets/atelier-1.jpeg.asset.json";
-import atelier2 from "@/assets/atelier-2.jpeg.asset.json";
-import atelier3 from "@/assets/atelier-3.jpg";
-import atelier4 from "@/assets/atelier-4.jpg";
-import atelier5 from "@/assets/atelier-5.jpg";
-import atelier6 from "@/assets/atelier-6.jpg";
-import atelier7 from "@/assets/atelier-7.jpg";
-import atelier8 from "@/assets/atelier-8.jpg";
+import a1 from "@/assets/atelier-new-1.jpeg.asset.json";
+import a2 from "@/assets/atelier-new-2.jpeg.asset.json";
+import a3 from "@/assets/atelier-new-3.jpeg.asset.json";
+import a4 from "@/assets/atelier-new-4.jpeg.asset.json";
+import a5 from "@/assets/atelier-new-5.jpeg.asset.json";
+import a6 from "@/assets/atelier-new-6.jpeg.asset.json";
+import a7 from "@/assets/atelier-new-7.jpeg.asset.json";
+import a8 from "@/assets/atelier-new-8.jpeg.asset.json";
 
 const IMAGES: { src: string; alt: string }[] = [
-  { src: atelier1.url, alt: "Bridal jewellery portrait" },
-  { src: atelier3, alt: "Bride in ivory lehenga" },
-  { src: atelier2.url, alt: "Bride in kanjivaram silk" },
-  { src: atelier4, alt: "Groom in charcoal bandhgala" },
-  { src: atelier5, alt: "Gold bangles detail" },
-  { src: atelier6, alt: "Emerald saree gown" },
-  { src: atelier7, alt: "Couple in pastel wedding wear" },
-  { src: atelier8, alt: "Zardozi hand embroidery" },
+  { src: a1.url, alt: "Peach sequined saree against a lattice screen" },
+  { src: a2.url, alt: "Beige tailored suit, editorial menswear" },
+  { src: a3.url, alt: "Linen shirt and chinos, coffee-hour ease" },
+  { src: a4.url, alt: "Maroon velvet saree with heirloom jewellery" },
+  { src: a5.url, alt: "Crimson peplum lehenga at a weathered door" },
+  { src: a6.url, alt: "Bridal couple in maroon at a palace courtyard" },
+  { src: a7.url, alt: "Ivory sherwani and Banarasi saree portrait" },
+  { src: a8.url, alt: "Ivory sherwani with brocade dupatta" },
 ];
 
 const TILTS = [-6, 4, -3, 5, -4, 6, -5, 3];
