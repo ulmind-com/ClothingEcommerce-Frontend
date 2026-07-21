@@ -28,6 +28,7 @@ import catSaree from "@/assets/cat-saree.jpeg.asset.json";
 import { VideoReel } from "@/components/home/VideoReel";
 import { RunwayLookbook } from "@/components/home/RunwayLookbook";
 import { ShopGallery } from "@/components/home/ShopGallery";
+import { EditorialSpotlight } from "@/components/home/EditorialSpotlight";
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
     await Promise.all([
@@ -50,6 +51,7 @@ function Home() {
       <CategoriesBento />
       <VideoReel />
       <RunwayLookbook />
+      <EditorialSpotlight />
       <NewArrivalsRail />
       <EditorialSplit />
       <HomeSections />
