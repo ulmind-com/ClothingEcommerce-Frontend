@@ -241,6 +241,10 @@ function Hero() {
 }
 
 function CategoriesBento() {
+  return null;
+}
+
+function _CategoriesBentoRemoved() {
   const { data: categories = [] } = useQuery(categoriesOptions());
   const roots = categories.filter((c: Category) => !c.parent_id && c.image).slice(0, 4);
   if (roots.length === 0) return null;
