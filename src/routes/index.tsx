@@ -20,8 +20,6 @@ import type { Category, HomeSection, Product } from "@/types/api";
 import heroBridal from "@/assets/hero-bridal.png.asset.json";
 import heroRedBride from "@/assets/hero-red-bride.png.asset.json";
 import heroColorEditorial from "@/assets/hero-color-editorial.jpg.asset.json";
-import { CuratedThisSeason } from "@/components/home/CuratedThisSeason";
-
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
     await Promise.all([
@@ -40,7 +38,6 @@ function Home() {
   return (
     <SiteChrome transparentHeader>
       <Hero />
-      <CuratedThisSeason />
       <CategoriesBento />
       <NewArrivalsRail />
       <EditorialSplit />
@@ -240,39 +237,46 @@ function CategoriesBento() {
   if (roots.length === 0) return null;
   return (
     <section className="py-24 md:py-32">
-      <div className="mx-auto max-w-[1400px] px-6 md:px-10">
-        <div className="flex items-end justify-between mb-12">
-          <div>
-            <div className="eyebrow mb-3">The House</div>
-            <h2 className="font-display text-4xl md:text-5xl">Explore the world of Maison</h2>
-          </div>
-          <Link to="/shop" className="hidden md:inline-flex eyebrow items-center gap-2 hover:text-champagne transition-colors">
-            All categories <ArrowRight className="h-3 w-3" />
-          </Link>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
-          {roots.map((c, i) => (
-            <Reveal key={c.id} delay={i}>
-              <Link
-                to="/shop"
-                search={{ category: c.id }}
-                className="group relative block aspect-[3/4] overflow-hidden bg-secondary"
-              >
-                <img
-                  src={c.image!}
-                  alt={c.name}
-                  className="h-full w-full object-cover transition-transform duration-[1400ms] group-hover:scale-[1.08]"
-                  style={{ transform: `scale(${c.image_scale ?? 1})` }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-ink/60 to-transparent opacity-70 transition-opacity duration-500 group-hover:opacity-90" />
-                <div className="absolute inset-x-4 bottom-4 flex items-end justify-between text-cream">
-                  <span className="font-display text-2xl">{c.name}</span>
-                  <ArrowRight className="h-4 w-4 translate-y-1 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100" />
-                </div>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
+      <div className="mx-auto max-w-[900px] px-6 text-center mb-14 md:mb-20">
+        <div className="eyebrow mb-4">The House</div>
+        <h2 className="font-display text-4xl md:text-5xl lg:text-6xl">
+          Explore the world of Maison
+        </h2>
+        <p className="mt-6 font-display italic text-warm-gray text-lg md:text-xl leading-relaxed">
+          A blend of classic silhouettes and our signature shine,
+          <br className="hidden md:block" /> embodied by enigmatic sequins.
+        </p>
+      </div>
+      <div className="grid grid-cols-2 md:grid-cols-4">
+        {roots.map((c, i) => (
+          <Reveal key={c.id} delay={i}>
+            <Link
+              to="/shop"
+              search={{ category: c.id }}
+              className="group relative block aspect-[3/5] overflow-hidden bg-secondary"
+            >
+              <img
+                src={c.image!}
+                alt={c.name}
+                className="h-full w-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-[1.06]"
+                style={{ transform: `scale(${c.image_scale ?? 1})` }}
+              />
+              <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink/70 to-transparent opacity-90" />
+              <div className="absolute inset-x-0 bottom-8 flex flex-col items-center text-cream">
+                <span className="eyebrow text-sm tracking-[0.35em]">{c.name}</span>
+                <span className="mt-3 block h-px w-0 bg-champagne transition-all duration-700 group-hover:w-10" />
+              </div>
+            </Link>
+          </Reveal>
+        ))}
+      </div>
+      <div className="mt-14 md:mt-20 flex justify-center">
+        <Link
+          to="/shop"
+          className="eyebrow relative inline-block pb-1 after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-ink hover:text-champagne hover:after:bg-champagne transition-colors"
+        >
+          View all
+        </Link>
       </div>
     </section>
   );
