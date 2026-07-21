@@ -30,17 +30,16 @@ export function RunwayLookbook() {
   const { data: all = [] } = useQuery(productsOptions({ limit: 12 }));
   const looks = useMemo(() => all.filter(hasImage).slice(0, 6), [all]);
   const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
   const reduce = useReducedMotion();
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (reduce || paused || looks.length < 2) return;
+    if (reduce || looks.length < 2) return;
     const id = window.setInterval(() => {
       setIndex((i) => (i + 1) % looks.length);
     }, AUTOPLAY_MS);
     return () => window.clearInterval(id);
-  }, [reduce, paused, looks.length]);
+  }, [reduce, looks.length]);
 
   useEffect(() => {
     const el = rootRef.current;
@@ -73,10 +72,6 @@ export function RunwayLookbook() {
     <section
       ref={rootRef}
       tabIndex={-1}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
       className="relative w-full bg-white overflow-hidden min-h-[780px] md:min-h-[880px] py-12 md:py-16"
       aria-label="Runway lookbook"
     >
@@ -121,8 +116,8 @@ export function RunwayLookbook() {
               <motion.div
                 key={`bar-${index}`}
                 initial={{ width: "0%" }}
-                animate={{ width: paused || reduce ? "0%" : "100%" }}
-                transition={{ duration: paused || reduce ? 0 : AUTOPLAY_MS / 1000, ease: "linear" }}
+                animate={{ width: reduce ? "0%" : "100%" }}
+                transition={{ duration: reduce ? 0 : AUTOPLAY_MS / 1000, ease: "linear" }}
                 className="h-full bg-champagne"
               />
             </div>
