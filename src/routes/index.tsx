@@ -59,10 +59,7 @@ function Home() {
       <CoutureSimplicity />
       <DiagonalEdit />
       <NewArrivalsRail />
-      <EditorialSplit />
-      <HomeSections />
       <CampaignQuote />
-      <RecommendedGrid />
     </SiteChrome>
   );
 }
