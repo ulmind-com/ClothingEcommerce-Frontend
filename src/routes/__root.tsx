@@ -89,10 +89,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:title", content: "Maison — Modern Couture" },
       {
         property: "og:description",
-        content: "Modern couture, editorial campaigns, and limited-series clothing.",
+        content: "Maison — a single-vendor luxury fashion house. Modern couture, editorial campaigns, and limited-series clothing.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Maison — Modern Couture" },
+      { name: "twitter:description", content: "Maison — a single-vendor luxury fashion house. Modern couture, editorial campaigns, and limited-series clothing." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/X2NilB1E7pVpCGOWtZiajaWQQV83/social-images/social-1784615160560-__(1).webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/X2NilB1E7pVpCGOWtZiajaWQQV83/social-images/social-1784615160560-__(1).webp" },
     ],
     links: [
       {
