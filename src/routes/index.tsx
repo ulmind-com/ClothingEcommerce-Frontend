@@ -25,6 +25,7 @@ import catLehenga from "@/assets/cat-lehenga.jpeg.asset.json";
 import catFusion from "@/assets/cat-fusion.jpeg.asset.json";
 import catSherwani from "@/assets/cat-sherwani.jpeg.asset.json";
 import catSaree from "@/assets/cat-saree.jpeg.asset.json";
+import { VideoReel } from "@/components/home/VideoReel";
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
     await Promise.all([
@@ -44,6 +45,7 @@ function Home() {
     <SiteChrome transparentHeader>
       <Hero />
       <CategoriesBento />
+      <VideoReel />
       <NewArrivalsRail />
       <EditorialSplit />
       <HomeSections />
