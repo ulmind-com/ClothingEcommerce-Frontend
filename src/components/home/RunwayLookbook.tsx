@@ -149,13 +149,12 @@ export function RunwayLookbook() {
               <AnimatePresence initial={false} mode="popLayout">
                 {stagedLooks.map(({ product: p, slot }) => {
                   const isActive = slot.offset === 0;
-                  const isIncoming = slot.offset === 1;
                   const img = productImage(p);
                   return (
                     <motion.div
                       key={`${slot.offset}-${p.id}`}
                       initial={{
-                        left: isIncoming ? "96%" : slot.x,
+                        left: slot.offset === -4 ? "-6%" : slot.x,
                         opacity: 0,
                         scale: slot.scale * 0.96,
                         filter: reduce
@@ -171,7 +170,7 @@ export function RunwayLookbook() {
                           : `blur(${slot.blur}px) saturate(${slot.saturate})`,
                       }}
                       exit={{
-                        left: slot.offset < 0 ? "-4%" : "48%",
+                        left: "-8%",
                         opacity: 0,
                         scale: slot.scale * 0.9,
                         filter: reduce ? "none" : "blur(20px) saturate(0.2)",
@@ -198,7 +197,6 @@ export function RunwayLookbook() {
                             src={img}
                             alt={p.title}
                             className="h-full w-full object-contain object-bottom select-none"
-                            style={{ mixBlendMode: "multiply" }}
                             draggable={false}
                             loading={isActive ? "eager" : "lazy"}
                           />
