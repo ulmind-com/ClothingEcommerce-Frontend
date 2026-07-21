@@ -247,7 +247,7 @@ function CategoriesBento() {
           <br className="hidden md:block" /> embodied by enigmatic sequins.
         </p>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 px-4 md:px-6">
         {roots.map((c, i) => (
           <Reveal key={c.id} delay={i}>
             <Link
@@ -261,7 +261,7 @@ function CategoriesBento() {
                 className="h-full w-full object-cover transition-transform duration-[1600ms] ease-out group-hover:scale-[1.06]"
                 style={{ transform: `scale(${c.image_scale ?? 1})` }}
               />
-              <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink/70 to-transparent opacity-90" />
+              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-ink/90 via-ink/40 to-transparent pointer-events-none" />
               <div className="absolute inset-x-0 bottom-8 flex flex-col items-center text-cream">
                 <span className="eyebrow text-sm tracking-[0.35em]">{c.name}</span>
                 <span className="mt-3 block h-px w-0 bg-champagne transition-all duration-700 group-hover:w-10" />
