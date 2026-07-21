@@ -16,7 +16,7 @@ import { ProductCard } from "@/components/product/ProductCard";
 import { LuxLink } from "@/components/ui/LuxButton";
 import { MaskReveal, Reveal } from "@/lib/motion/Reveal";
 import { productImage } from "@/lib/utils/product";
-import type { Banner, Category, HomeSection, Product } from "@/types/api";
+import type { Category, HomeSection, Product } from "@/types/api";
 import heroBridal from "@/assets/hero-bridal.png.asset.json";
 
 export const Route = createFileRoute("/")({
