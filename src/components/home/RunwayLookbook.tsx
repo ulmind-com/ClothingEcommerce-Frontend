@@ -98,7 +98,7 @@ export function RunwayLookbook() {
             </p>
           </div>
           <div className="mt-10 md:mt-0">
-            <div className="relative h-[92px] md:h-[110px] overflow-hidden">
+            <div className="relative h-[92px] md:h-[110px] overflow-visible">
               <AnimatePresence mode="popLayout" initial={false}>
                 <motion.div
                   key={lookNumber}
