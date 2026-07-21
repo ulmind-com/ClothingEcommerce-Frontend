@@ -72,9 +72,9 @@
   --blush: oklch(0.94 0.03 15);
   --blush-soft: oklch(0.97 0.015 15);
   --mint: oklch(0.78 0.13 155);
-  --gold: oklch(0.80 0.10 80);
+  --gold: oklch(0.78 0.11 80);
   --gold-soft: oklch(0.96 0.02 82);
-  --gold-muted: oklch(0.88 0.05 80);
+  --gold-muted: oklch(0.90 0.05 80);
   --background: var(--cream);
   --foreground: var(--ink);
   --card: oklch(0.985 0.006 85);
