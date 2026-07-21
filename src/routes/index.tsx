@@ -29,6 +29,7 @@ import { VideoReel } from "@/components/home/VideoReel";
 import { RunwayLookbook } from "@/components/home/RunwayLookbook";
 import { ShopGallery } from "@/components/home/ShopGallery";
 import { EditorialSpotlight } from "@/components/home/EditorialSpotlight";
+import { AtelierStories } from "@/components/home/AtelierStories";
 export const Route = createFileRoute("/")({
   loader: async ({ context }) => {
     await Promise.all([
@@ -52,6 +53,7 @@ function Home() {
       <VideoReel />
       <RunwayLookbook />
       <EditorialSpotlight />
+      <AtelierStories />
       <NewArrivalsRail />
       <EditorialSplit />
       <HomeSections />
