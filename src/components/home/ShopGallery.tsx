@@ -209,7 +209,7 @@ export function ShopGallery() {
               <Link
                 to="/shop"
                 search={tile.categoryId ? { category: tile.categoryId } : {}}
-                className={`group relative flex items-center gap-3 rounded-full overflow-hidden pl-2 pr-4 md:pr-5 h-20 md:h-24 bg-gradient-to-r ${tile.gradient} text-cream shadow-[0_10px_30px_-15px_rgba(220,50,80,0.45)] transition-transform duration-500 hover:-translate-y-0.5`}
+                className={`group relative flex items-center gap-3 rounded-full overflow-hidden pl-2 pr-4 md:pr-5 h-20 md:h-24 bg-gradient-to-r ${tile.gradient} text-cream shadow-[0_10px_30px_-15px_rgba(190,140,50,0.45)] transition-transform duration-500 hover:-translate-y-0.5`}
               >
                 <div className="relative h-16 md:h-20 w-16 md:w-20 shrink-0 rounded-full overflow-hidden ring-2 ring-cream/40 bg-cream/20">
                   {tile.image ? (
