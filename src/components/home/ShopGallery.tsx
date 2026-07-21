@@ -218,13 +218,8 @@ export function ShopGallery() {
                     <div className="h-full w-full bg-gradient-to-br from-white/40 to-transparent" />
                   )}
                 </div>
-                <div className="flex-1 min-w-0 font-display text-lg md:text-xl leading-[1.05] pr-2">
-                  {tile.label.split(" ").map((w, wi, arr) => (
-                    <span key={wi} className="block truncate">
-                      {w}
-                      {wi < arr.length - 1 && arr.length > 2 ? "" : ""}
-                    </span>
-                  ))}
+                <div className="flex-1 min-w-0 font-display text-base md:text-lg leading-tight pr-2 truncate">
+                  {tile.label}
                 </div>
                 <span className="ml-auto grid place-items-center h-9 w-9 rounded-full bg-cream/15 text-cream transition-transform duration-500 group-hover:translate-x-1 group-hover:bg-cream/25">
                   <ArrowRight className="h-4 w-4" strokeWidth={1.75} />
