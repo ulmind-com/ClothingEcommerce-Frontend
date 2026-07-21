@@ -255,29 +255,37 @@ export function RunwayLookbook() {
 function ShopCard({ product }: { product: Product }) {
   const img = productImage(product);
   return (
-    <div className="group relative bg-cream border border-border/70 shadow-[0_24px_60px_-44px_color-mix(in_oklab,var(--ink)_45%,transparent)]">
+    <div className="group relative border border-ink/15 bg-white">
+      <button
+        type="button"
+        aria-label="Save to wishlist"
+        className="absolute left-3 top-3 z-10 grid place-items-center h-7 w-7 rounded-full text-ink/60 hover:text-ink transition-colors"
+        onClick={(e) => e.preventDefault()}
+      >
+        <Heart className="h-4 w-4" strokeWidth={1.25} />
+      </button>
       <Link
         to="/product/$id"
         params={{ id: product.id }}
         className="block"
       >
-        <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
+        <div className="relative aspect-[3/4] overflow-hidden bg-white">
           {img ? (
             <img
               src={img}
               alt={product.title}
-              className="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.04]"
+              className="h-full w-full object-contain transition-transform duration-[1200ms] ease-out group-hover:scale-[1.03]"
               draggable={false}
             />
           ) : null}
         </div>
-        <div className="flex items-start justify-between gap-3 p-3">
+        <div className="flex items-start justify-between gap-3 px-3 py-3 border-t border-ink/10">
           <div className="min-w-0">
-            <div className="eyebrow text-[10px] text-ink/80 truncate">{product.title}</div>
-            <div className="mt-1 text-sm text-ink/80">{formatPrice(product.price)}</div>
+            <div className="eyebrow text-[10px] tracking-[0.18em] text-ink/70 truncate uppercase">{product.title}</div>
+            <div className="mt-1 text-sm text-ink/70">{formatPrice(product.price)}</div>
           </div>
-          <span className="mt-0.5 grid place-items-center h-7 w-7 rounded-full border border-ink/20 text-ink/60 group-hover:border-champagne group-hover:text-champagne transition-colors">
-            <Plus className="h-3.5 w-3.5" />
+          <span className="mt-0.5 grid place-items-center h-6 w-6 text-ink/50 group-hover:text-ink transition-colors">
+            <Plus className="h-4 w-4" strokeWidth={1.25} />
           </span>
         </div>
       </Link>
