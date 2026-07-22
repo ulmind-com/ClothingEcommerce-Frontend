@@ -40,19 +40,19 @@ export function SiteFooter() {
           <div>
             <div className="eyebrow text-ink/60 mb-5">Shop</div>
             <ul className="space-y-3 text-sm">
-              <li><Link to="/shop" search={{ sort: "newest" }} className="text-ink/80 hover:text-ink">New Arrivals</Link></li>
-              <li><Link to="/shop" search={{ sort: "newest" }} className="text-ink/80 hover:text-ink">Women</Link></li>
-              <li><Link to="/shop" search={{ sort: "newest" }} className="text-ink/80 hover:text-ink">Men</Link></li>
-              <li><Link to="/shop" search={{ sort: "newest" }} className="text-ink/80 hover:text-ink">Collections</Link></li>
+              <li><Link to="/shop" search={{ sort: "newest" }} className="inline-block py-2.5 text-ink/80 hover:text-ink md:py-0">New Arrivals</Link></li>
+              <li><Link to="/shop" search={{ sort: "newest" }} className="inline-block py-2.5 text-ink/80 hover:text-ink md:py-0">Women</Link></li>
+              <li><Link to="/shop" search={{ sort: "newest" }} className="inline-block py-2.5 text-ink/80 hover:text-ink md:py-0">Men</Link></li>
+              <li><Link to="/shop" search={{ sort: "newest" }} className="inline-block py-2.5 text-ink/80 hover:text-ink md:py-0">Collections</Link></li>
             </ul>
           </div>
           <div>
             <div className="eyebrow text-ink/60 mb-5">Client Services</div>
             <ul className="space-y-3 text-sm">
-              <li><Link to="/" className="text-ink/80 hover:text-ink">Shipping</Link></li>
-              <li><Link to="/" className="text-ink/80 hover:text-ink">Returns</Link></li>
-              <li><Link to="/" className="text-ink/80 hover:text-ink">Size Guide</Link></li>
-              <li><Link to="/" className="text-ink/80 hover:text-ink">Care</Link></li>
+              <li><Link to="/" className="inline-block py-2.5 text-ink/80 hover:text-ink md:py-0">Shipping</Link></li>
+              <li><Link to="/" className="inline-block py-2.5 text-ink/80 hover:text-ink md:py-0">Returns</Link></li>
+              <li><Link to="/" className="inline-block py-2.5 text-ink/80 hover:text-ink md:py-0">Size Guide</Link></li>
+              <li><Link to="/" className="inline-block py-2.5 text-ink/80 hover:text-ink md:py-0">Care</Link></li>
             </ul>
           </div>
 

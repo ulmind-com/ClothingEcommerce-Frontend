@@ -21,7 +21,7 @@ function CartPage() {
 
   return (
     <SiteChrome>
-      <section className="mx-auto max-w-[1200px] px-6 py-32 md:px-10">
+      <section className="mx-auto max-w-[1200px] px-5 pb-20 pt-24 md:px-10 md:pb-32 md:pt-32">
         <div className="eyebrow mb-3">Bag</div>
         <h1 className="font-display text-4xl text-ink md:text-5xl">
           Your selection
@@ -44,12 +44,12 @@ function CartPage() {
               {lines.map((l) => (
                 <li
                   key={`${l.productId}-${l.color ?? ""}-${l.size ?? ""}`}
-                  className="flex gap-6 py-6"
+                  className="flex gap-4 py-6 md:gap-6"
                 >
                   <Link
                     to="/product/$id"
                     params={{ id: l.productId }}
-                    className="block h-36 w-24 shrink-0 overflow-hidden bg-secondary"
+                    className="block h-28 w-20 shrink-0 overflow-hidden bg-secondary md:h-36 md:w-24"
                   >
                     {l.image && (
                       <img
@@ -80,7 +80,7 @@ function CartPage() {
                           onClick={() =>
                             setQty(l.productId, l.quantity - 1, l.color, l.size)
                           }
-                          className="px-3 py-2"
+                          className="grid h-11 w-11 place-items-center"
                         >
                           <Minus className="h-3 w-3" />
                         </button>
@@ -92,7 +92,7 @@ function CartPage() {
                           onClick={() =>
                             setQty(l.productId, l.quantity + 1, l.color, l.size)
                           }
-                          className="px-3 py-2"
+                          className="grid h-11 w-11 place-items-center"
                         >
                           <Plus className="h-3 w-3" />
                         </button>
@@ -103,7 +103,7 @@ function CartPage() {
                         </div>
                         <button
                           onClick={() => remove(l.productId, l.color, l.size)}
-                          className="eyebrow mt-1 text-warm-gray hover:text-ink"
+                          className="eyebrow mt-1 min-h-11 text-warm-gray hover:text-ink md:min-h-0"
                         >
                           Remove
                         </button>
@@ -114,7 +114,7 @@ function CartPage() {
               ))}
             </ul>
 
-            <aside className="h-fit border border-border p-8">
+            <aside className="h-fit border border-border p-6 md:p-8">
               <div className="eyebrow mb-6">Summary</div>
               <div className="flex items-center justify-between text-sm">
                 <span className="text-warm-gray">Subtotal</span>

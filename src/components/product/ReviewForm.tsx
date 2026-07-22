@@ -71,7 +71,7 @@ export function ReviewForm({ productId }: { productId: string }) {
   }
 
   return (
-    <div className="mt-10 border border-border p-8">
+    <div className="mt-10 border border-border p-6 md:p-8">
       <h3 className="eyebrow mb-6">Write a review</h3>
 
       <div className="flex gap-1">
@@ -83,7 +83,7 @@ export function ReviewForm({ productId }: { productId: string }) {
             onClick={() => setRating(n)}
             onMouseEnter={() => setHover(n)}
             onMouseLeave={() => setHover(0)}
-            className="p-1"
+            className="grid h-11 w-11 place-items-center"
           >
             <Star
               className={cn(
@@ -123,14 +123,14 @@ export function ReviewForm({ productId }: { productId: string }) {
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Headline"
         maxLength={120}
-        className="mt-6 w-full border-b border-border bg-transparent py-3 text-sm text-ink outline-none focus:border-ink"
+        className="mt-6 w-full border-b border-border bg-transparent min-h-11 py-3 text-base text-ink outline-none focus:border-ink md:text-sm"
       />
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
         rows={4}
         placeholder="How did it fit? How does it feel?"
-        className="mt-4 w-full resize-none border border-border bg-transparent p-3 text-sm text-ink outline-none focus:border-ink"
+        className="mt-4 w-full resize-none border border-border bg-transparent p-3 text-base text-ink outline-none focus:border-ink md:text-sm"
       />
 
       <button

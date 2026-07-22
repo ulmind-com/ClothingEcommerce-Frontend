@@ -16,6 +16,7 @@ import { formatPrice } from "@/lib/utils/format";
 import { useCart } from "@/lib/cart/store";
 import { Reveal } from "@/lib/motion/Reveal";
 import { useSectionMedia } from "@/hooks/use-section-media";
+import { useWishlist } from "@/hooks/use-wishlist";
 import type { Category, Product } from "@/types/api";
 import pillWomenGalleryAsset from "@/assets/pill-women-gallery.jpeg.asset.json";
 import pillChildrenFashionAsset from "@/assets/pill-children-fashion.jpeg.asset.json";
@@ -154,6 +155,7 @@ export function ShopGallery() {
   const [filter, setFilter] = useState<FilterKey>("all");
   const [activeCard, setActiveCard] = useState<string | null>(null);
   const addToCart = useCart((s) => s.add);
+  const wishlist = useWishlist();
 
   const pillMedia = useSectionMedia("shop_gallery", PILL_FALLBACK);
 
@@ -233,7 +235,7 @@ export function ShopGallery() {
                     <div className="h-full w-full bg-gradient-to-br from-white/40 to-transparent" />
                   )}
                 </div>
-                <div className="flex-1 min-w-0 font-display text-base md:text-lg leading-tight pr-2 truncate">
+                <div className="min-w-0 flex-1 truncate pr-2 font-display text-[0.95rem] leading-tight md:text-lg">
                   {tile.label}
                 </div>
                 <span className="ml-auto grid place-items-center h-9 w-9 rounded-full bg-cream/15 text-cream transition-transform duration-500 group-hover:translate-x-1 group-hover:bg-cream/25">
@@ -327,7 +329,7 @@ export function ShopGallery() {
                   <div className="px-4 pt-3 pb-4">
                     <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0">
-                          <div className="text-sm font-medium text-ink truncate">
+                          <div className="line-clamp-2 text-sm font-medium leading-snug text-ink md:truncate">
                             {p.title}
                           </div>
                           <div className="mt-1 text-gold font-semibold">
@@ -336,14 +338,27 @@ export function ShopGallery() {
                         </div>
                         <button
                           type="button"
-                          aria-label="Save to wishlist"
+                          aria-label={
+                            wishlist.has(p.id)
+                              ? "Remove from wishlist"
+                              : "Save to wishlist"
+                          }
+                          aria-pressed={wishlist.has(p.id)}
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
+                            wishlist.toggle(p.id);
                           }}
-                          className="shrink-0 grid place-items-center h-8 w-8 rounded-full text-ink/50 hover:text-gold transition-colors"
+                          className={`grid h-11 w-11 shrink-0 place-items-center rounded-full transition-colors md:h-8 md:w-8 ${
+                            wishlist.has(p.id)
+                              ? "text-gold"
+                              : "text-ink/50 hover:text-gold"
+                          }`}
                         >
-                        <Heart className="h-4 w-4" strokeWidth={1.5} />
+                        <Heart
+                          className={`h-4 w-4 ${wishlist.has(p.id) ? "fill-current" : ""}`}
+                          strokeWidth={1.5}
+                        />
                       </button>
                     </div>
 

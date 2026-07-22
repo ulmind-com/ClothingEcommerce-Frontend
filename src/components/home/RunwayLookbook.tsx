@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight, Heart, Plus } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { productsOptions } from "@/lib/api/queries";
 import { productImage } from "@/lib/utils/product";
+import { useWishlist } from "@/hooks/use-wishlist";
 import { formatPrice } from "@/lib/utils/format";
 import type { Product } from "@/types/api";
 
@@ -124,7 +125,7 @@ export function RunwayLookbook() {
             <Link
               to="/product/$id"
               params={{ id: active.id }}
-              className="mt-6 inline-block eyebrow relative pb-1 after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-ink hover:text-champagne hover:after:bg-champagne transition-colors"
+              className="mt-4 inline-block eyebrow relative py-3 pb-2 after:absolute after:inset-x-0 after:bottom-1.5 after:h-px after:bg-ink hover:text-champagne hover:after:bg-champagne transition-colors"
             >
               Shop the Look
             </Link>
@@ -249,15 +250,27 @@ export function RunwayLookbook() {
 
 function ShopCard({ product }: { product: Product }) {
   const img = productImage(product);
+  const wishlist = useWishlist();
+  const saved = wishlist.has(product.id);
   return (
     <div className="group relative border border-ink/15 bg-white">
       <button
         type="button"
-        aria-label="Save to wishlist"
-        className="absolute left-3 top-3 z-10 grid place-items-center h-7 w-7 rounded-full text-ink/60 hover:text-ink transition-colors"
-        onClick={(e) => e.preventDefault()}
+        aria-label={saved ? "Remove from wishlist" : "Save to wishlist"}
+        aria-pressed={saved}
+        className={`absolute left-1 top-1 z-10 grid h-11 w-11 place-items-center rounded-full transition-colors md:left-3 md:top-3 md:h-7 md:w-7 ${
+          saved ? "text-ink" : "text-ink/60 hover:text-ink"
+        }`}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          wishlist.toggle(product.id);
+        }}
       >
-        <Heart className="h-4 w-4" strokeWidth={1.25} />
+        <Heart
+          className={`h-4 w-4 ${saved ? "fill-current" : ""}`}
+          strokeWidth={1.25}
+        />
       </button>
       <Link
         to="/product/$id"

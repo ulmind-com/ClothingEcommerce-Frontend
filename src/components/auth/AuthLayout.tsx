@@ -144,7 +144,7 @@ export function LuxField({
         inputMode={inputMode}
         maxLength={maxLength}
         placeholder={placeholder}
-        className="mt-2 w-full border-b border-border bg-transparent pb-3 pt-1 text-[0.95rem] text-ink outline-none transition-colors placeholder:text-warm-gray/40 focus:border-ink"
+        className="mt-2 min-h-11 w-full border-b border-border bg-transparent pb-3.5 pt-1.5 text-base text-ink outline-none transition-colors placeholder:text-warm-gray/40 focus:border-ink md:text-[0.95rem]"
       />
     </label>
   );

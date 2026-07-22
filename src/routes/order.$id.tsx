@@ -74,7 +74,7 @@ function OrderDetailPage() {
   if (!order) {
     return (
       <SiteChrome>
-        <section className="mx-auto max-w-md px-6 py-32 text-center">
+        <section className="mx-auto max-w-md px-5 pb-20 pt-24 text-center md:py-32">
           <h1 className="font-display text-3xl text-ink">Order not found</h1>
           <Link to="/orders" className="eyebrow mt-8 inline-block bg-ink px-10 py-4 text-cream">
             All orders
@@ -92,7 +92,7 @@ function OrderDetailPage() {
 
   return (
     <SiteChrome>
-      <section className="mx-auto max-w-[900px] px-6 py-32 md:px-10">
+      <section className="mx-auto max-w-[900px] px-5 pb-20 pt-24 md:px-10 md:pb-32 md:pt-32">
         <Link to="/orders" className="eyebrow text-warm-gray hover:text-ink">
           ← All orders
         </Link>

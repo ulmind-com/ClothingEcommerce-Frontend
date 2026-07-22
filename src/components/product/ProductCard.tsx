@@ -77,7 +77,7 @@ export function ProductCard({
               wishlist.toggle(product.id);
             }}
             className={cn(
-              "absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full backdrop-blur transition-colors",
+              "absolute right-2 top-2 grid h-11 w-11 place-items-center rounded-full backdrop-blur transition-colors md:right-4 md:top-4 md:h-9 md:w-9",
               saved
                 ? "bg-ink text-cream"
                 : "bg-cream/85 text-ink hover:bg-ink hover:text-cream",
@@ -98,7 +98,9 @@ export function ProductCard({
             {product.brand && (
               <div className="eyebrow mb-1 truncate">{product.brand}</div>
             )}
-            <h3 className="truncate text-sm text-ink">{product.title}</h3>
+            <h3 className="line-clamp-2 text-sm leading-snug text-ink md:truncate">
+              {product.title}
+            </h3>
           </div>
           <div className="text-right text-sm">
             <div className="text-ink">{formatPrice(product.price, currency)}</div>

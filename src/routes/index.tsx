@@ -151,21 +151,21 @@ function Hero() {
             )}
           </motion.div>
         </AnimatePresence>
-        <div className="absolute inset-0 bg-gradient-to-b from-ink/50 via-ink/25 to-ink/90" />
+        <div className="absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/35 to-ink/95 md:from-ink/50 md:via-ink/25 md:to-ink/90" />
       </motion.div>
 
-      <div className="relative z-10 flex h-full flex-col justify-end px-6 pb-16 md:px-16 md:pb-24">
+      <div className="relative z-10 flex h-full flex-col justify-end px-5 pb-24 md:px-16 md:pb-24">
         <div className="max-w-3xl" key={`copy-${index}`}>
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
-            className="eyebrow text-cream/70 mb-6"
+            className="eyebrow mb-4 text-cream/70 md:mb-6"
           >
             {slide?.code || "Autumn / Winter 26"}
           </motion.div>
           <MaskReveal>
-            <h1 className="font-display text-5xl md:text-7xl lg:text-[6.5rem] leading-[1.02] tracking-[-0.01em]">
+            <h1 className="font-display text-[2.1rem] leading-[1.06] tracking-[-0.01em] sm:text-5xl md:text-7xl md:leading-[1.02] lg:text-[6.5rem]">
               {slide?.title}
             </h1>
           </MaskReveal>
@@ -173,7 +173,7 @@ function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.9, duration: 0.8 }}
-            className="mt-6 max-w-lg text-cream/75"
+            className="mt-4 max-w-lg text-sm leading-relaxed text-cream/80 md:mt-6 md:text-base"
           >
             {slide?.subtitle ||
               "Ateliers in Milan, cutting rooms in Kolkata. A limited series shaped by hand for the season ahead."}
@@ -182,7 +182,7 @@ function Hero() {
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.1, duration: 0.8 }}
-            className="mt-10 flex flex-wrap gap-4"
+            className="mt-7 flex flex-wrap gap-3 md:mt-10 md:gap-4"
           >
             <LuxLink
               to="/shop"
@@ -220,16 +220,25 @@ function Hero() {
           >
             <ChevronRight className="h-5 w-5" />
           </button>
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2">
+          <div className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 items-center md:bottom-8">
             {slides.map((_, i) => (
+              /* The dash stays small; the button around it carries a 44px
+                 touch box so it's tappable on a phone. */
               <button
                 key={i}
                 aria-label={`Go to slide ${i + 1}`}
+                aria-current={i === index}
                 onClick={() => setIndex(i)}
-                className={`h-1.5 rounded-full transition-all duration-500 ${
-                  i === index ? "w-8 bg-cream" : "w-1.5 bg-cream/40 hover:bg-cream/70"
-                }`}
-              />
+                className="grid h-11 w-8 place-items-center"
+              >
+                <span
+                  className={`block h-1.5 rounded-full transition-all duration-500 ${
+                    i === index
+                      ? "w-8 bg-cream"
+                      : "w-1.5 bg-cream/40 hover:bg-cream/70"
+                  }`}
+                />
+              </button>
             ))}
           </div>
         </>
@@ -303,7 +312,7 @@ function CategoriesBento() {
         <Link
           to="/shop"
           search={{ sort: "newest" }}
-          className="eyebrow relative inline-block pb-1 after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-ink hover:text-champagne hover:after:bg-champagne transition-colors"
+          className="eyebrow relative inline-block py-3 pb-2 after:absolute after:inset-x-0 after:bottom-1.5 after:h-px after:bg-ink hover:text-champagne hover:after:bg-champagne transition-colors"
         >
           View all
         </Link>
@@ -331,7 +340,7 @@ function NewArrivalsRail() {
           <Link
             to="/shop"
             search={{ sort: "newest" }}
-            className="eyebrow relative inline-flex items-center gap-2 pb-1 after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-ink hover:text-champagne hover:after:bg-champagne transition-colors"
+            className="eyebrow relative inline-flex items-center gap-2 py-3 pb-2 after:absolute after:inset-x-0 after:bottom-1.5 after:h-px after:bg-ink hover:text-champagne hover:after:bg-champagne transition-colors"
           >
             See more <ArrowRight className="h-3 w-3" />
           </Link>
@@ -414,7 +423,7 @@ function SectionBlock({ section }: { section: HomeSection }) {
 
 function CampaignQuote() {
   return (
-    <section className="py-32 md:py-48 bg-ink text-cream text-center overflow-hidden">
+    <section className="overflow-hidden bg-ink py-20 text-center text-cream md:py-48">
       <div className="mx-auto max-w-4xl px-6">
         <MaskReveal>
           <p className="font-display italic text-3xl md:text-5xl lg:text-6xl leading-[1.15]">

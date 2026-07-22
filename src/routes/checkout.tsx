@@ -203,7 +203,7 @@ function CheckoutPage() {
   if (lines.length === 0) {
     return (
       <SiteChrome>
-        <section className="mx-auto max-w-md px-6 py-32 text-center">
+        <section className="mx-auto max-w-md px-5 pb-20 pt-24 text-center md:py-32">
           <h1 className="font-display text-3xl text-ink">Your bag is empty</h1>
           <Link
             to="/shop"
@@ -219,7 +219,7 @@ function CheckoutPage() {
 
   return (
     <SiteChrome>
-      <section className="mx-auto max-w-[1200px] px-6 py-32 md:px-10">
+      <section className="mx-auto max-w-[1200px] px-5 pb-20 pt-24 md:px-10 md:pb-32 md:pt-32">
         <div className="eyebrow mb-3">Checkout</div>
         <h1 className="font-display text-4xl text-ink md:text-5xl">
           Complete your order
@@ -276,7 +276,7 @@ function CheckoutPage() {
                     onChange={(e) =>
                       setAddress({ ...address, tag: e.target.value })
                     }
-                    className="mt-2 w-full border-b border-border bg-transparent py-3 text-sm text-ink outline-none focus:border-ink"
+                    className="mt-2 w-full border-b border-border bg-transparent min-h-11 py-3 text-base text-ink outline-none focus:border-ink md:text-sm"
                   >
                     <option>Home</option>
                     <option>Work</option>
@@ -300,7 +300,7 @@ function CheckoutPage() {
                   value={coupon}
                   onChange={(e) => setCoupon(e.target.value.toUpperCase())}
                   placeholder="Coupon code"
-                  className="flex-1 border-b border-border bg-transparent py-3 text-sm uppercase text-ink outline-none focus:border-ink"
+                  className="flex-1 border-b border-border bg-transparent min-h-11 py-3 text-base uppercase text-ink outline-none focus:border-ink md:text-sm"
                 />
                 {coupon && (
                   <button

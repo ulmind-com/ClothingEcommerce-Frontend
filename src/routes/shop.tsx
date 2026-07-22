@@ -100,7 +100,7 @@ function ShopPage() {
             <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={() => navigate({ to: ".", search: (p: ShopSearch) => ({ ...p, category: undefined }) })}
-                className={`eyebrow px-3 py-1.5 transition-colors ${!search.category ? "bg-ink text-cream" : "hover:text-champagne"}`}
+                className={`eyebrow inline-flex min-h-11 items-center px-4 py-3 transition-colors md:min-h-0 md:px-3 md:py-1.5 ${!search.category ? "bg-ink text-cream" : "hover:text-champagne"}`}
               >
                 All
               </button>
@@ -110,14 +110,14 @@ function ShopPage() {
                   onClick={() =>
                     navigate({ to: ".", search: (p: ShopSearch) => ({ ...p, category: c.id }) })
                   }
-                  className={`eyebrow px-3 py-1.5 transition-colors ${search.category === c.id ? "bg-ink text-cream" : "hover:text-champagne"}`}
+                  className={`eyebrow inline-flex min-h-11 items-center px-4 py-3 transition-colors md:min-h-0 md:px-3 md:py-1.5 ${search.category === c.id ? "bg-ink text-cream" : "hover:text-champagne"}`}
                 >
                   {c.name}
                 </button>
               ))}
             </div>
             <div className="flex items-center gap-4">
-              <label className="eyebrow flex items-center gap-2 cursor-pointer">
+              <label className="eyebrow flex min-h-11 cursor-pointer items-center gap-2.5 md:min-h-0">
                 <input
                   type="checkbox"
                   checked={!!search.inStock}
@@ -130,7 +130,7 @@ function ShopPage() {
                       }),
                     })
                   }
-                  className="accent-ink"
+                  className="h-4 w-4 accent-ink"
                 />
                 In stock
               </label>
@@ -145,7 +145,7 @@ function ShopPage() {
                     }),
                   })
                 }
-                className="eyebrow bg-transparent border-b border-border py-1 focus:outline-none focus:border-ink"
+                className="eyebrow min-h-11 border-b border-border bg-transparent py-1 focus:border-ink focus:outline-none md:min-h-0"
               >
                 <option value="newest">Newest</option>
                 <option value="price_asc">Price ↑</option>
@@ -183,7 +183,7 @@ function ShopPage() {
               <button
                 onClick={() => infinite.fetchNextPage()}
                 disabled={infinite.isFetchingNextPage}
-                className="eyebrow border-b border-ink hover:text-champagne hover:border-champagne pb-1 disabled:opacity-50"
+                className="eyebrow min-h-11 border-b border-ink px-2 pb-1 hover:border-champagne hover:text-champagne disabled:opacity-50"
               >
                 {infinite.isFetchingNextPage ? "Loading…" : "Load more"}
               </button>

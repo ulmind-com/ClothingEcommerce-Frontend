@@ -113,15 +113,15 @@ function AccountPage() {
 
   return (
     <SiteChrome>
-      <section className="mx-auto max-w-[1100px] px-6 pb-32 pt-32 md:px-10">
+      <section className="mx-auto max-w-[1100px] px-5 pb-20 pt-24 md:px-10 md:pb-32 md:pt-32">
         {/* Identity */}
         <motion.header
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: EASE }}
-          className="flex flex-col items-start gap-8 border-b border-border pb-12 sm:flex-row sm:items-center"
+          className="flex items-center gap-5 border-b border-border pb-8 md:gap-8 md:pb-12"
         >
-          <div className="grid h-24 w-24 shrink-0 place-items-center rounded-full bg-ink">
+          <div className="grid h-16 w-16 shrink-0 place-items-center rounded-full bg-ink md:h-24 md:w-24">
             {user?.avatar ? (
               <img
                 src={user.avatar}
@@ -129,14 +129,14 @@ function AccountPage() {
                 className="h-full w-full rounded-full object-cover"
               />
             ) : (
-              <span className="font-display text-3xl text-cream">
+              <span className="font-display text-xl text-cream md:text-3xl">
                 {initials}
               </span>
             )}
           </div>
           <div className="min-w-0">
             <div className="eyebrow mb-3">Account</div>
-            <h1 className="font-display text-4xl leading-none text-ink md:text-5xl">
+            <h1 className="font-display text-3xl leading-none text-ink md:text-5xl">
               {user?.name ?? "Your account"}
             </h1>
             <p className="mt-3 text-sm text-warm-gray">{user?.email}</p>
@@ -144,7 +144,7 @@ function AccountPage() {
         </motion.header>
 
         {/* Dashboard tiles */}
-        <div className="mt-12 grid gap-px bg-border sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid grid-cols-2 gap-px bg-border lg:grid-cols-3">
           {tiles.map((t, i) => (
             <motion.div
               key={t.to}
@@ -154,7 +154,7 @@ function AccountPage() {
             >
               <Link
                 to={t.to}
-                className="group flex h-full flex-col justify-between gap-10 bg-cream p-8 transition-colors hover:bg-ink"
+                className="group flex h-full flex-col justify-between gap-6 bg-cream p-5 transition-colors hover:bg-ink md:gap-10 md:p-8"
               >
                 <t.icon className="h-5 w-5 text-champagne" />
                 <div>
@@ -171,7 +171,7 @@ function AccountPage() {
         </div>
 
         {/* Profile */}
-        <div className="mt-20 grid gap-16 lg:grid-cols-[1fr_320px]">
+        <div className="mt-16 grid gap-12 lg:grid-cols-[1fr_320px]">
           <div>
             <div className="eyebrow mb-8">Your details</div>
             <form
@@ -217,7 +217,7 @@ function AccountPage() {
             </form>
           </div>
 
-          <aside className="h-fit border border-border p-8">
+          <aside className="h-fit border border-border p-6 md:p-8">
             <div className="eyebrow mb-4">Session</div>
             <p className="text-sm leading-relaxed text-warm-gray">
               Signing out clears your saved session on this device. Your bag

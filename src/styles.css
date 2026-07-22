@@ -165,10 +165,25 @@
   .eyebrow {
     font-family: var(--font-sans);
     text-transform: uppercase;
-    letter-spacing: 0.28em;
-    font-size: 0.7rem;
+    /* Wide tracking eats horizontal room, so ease off on narrow screens where
+       these labels otherwise wrap or clip. */
+    letter-spacing: 0.2em;
+    font-size: 0.72rem;
     font-weight: 500;
     color: var(--color-muted-foreground);
+  }
+  @media (min-width: 768px) {
+    .eyebrow {
+      letter-spacing: 0.28em;
+      font-size: 0.7rem;
+    }
+  }
+  /* Utility-set sizes below ~11px are unreadable on a phone; hold a floor on
+     small screens and let the authored size apply from md up. */
+  @media (max-width: 767px) {
+    .eyebrow[class*="text-["] {
+      font-size: 0.68rem;
+    }
   }
   .hairline { border-top: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent); }
   ::selection { background: var(--champagne); color: var(--ink); }

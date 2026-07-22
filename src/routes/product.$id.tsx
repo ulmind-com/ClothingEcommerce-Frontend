@@ -204,9 +204,11 @@ function ProductPage() {
               <div className="mt-8">
                 <div className="flex items-center justify-between mb-3">
                   <div className="eyebrow">Size</div>
-                  <button className="eyebrow hover:text-champagne">Size guide</button>
+                  <button className="eyebrow min-h-11 px-1 hover:text-champagne md:min-h-0">
+                    Size guide
+                  </button>
                 </div>
-                <div className="grid grid-cols-5 gap-2">
+                <div className="grid grid-cols-4 gap-2 sm:grid-cols-5">
                   {sizeList.map((s) => {
                     const disabled = s.stock <= 0;
                     return (
@@ -235,7 +237,7 @@ function ProductPage() {
                 <button
                   aria-label="Decrease"
                   onClick={() => setQty((q) => Math.max(1, q - 1))}
-                  className="p-3 hover:bg-ink hover:text-cream transition-colors"
+                  className="grid h-11 w-11 place-items-center transition-colors hover:bg-ink hover:text-cream"
                 >
                   <Minus className="h-3 w-3" />
                 </button>
@@ -243,7 +245,7 @@ function ProductPage() {
                 <button
                   aria-label="Increase"
                   onClick={() => setQty((q) => q + 1)}
-                  className="p-3 hover:bg-ink hover:text-cream transition-colors"
+                  className="grid h-11 w-11 place-items-center transition-colors hover:bg-ink hover:text-cream"
                 >
                   <Plus className="h-3 w-3" />
                 </button>

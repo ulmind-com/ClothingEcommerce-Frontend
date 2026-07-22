@@ -1,6 +1,16 @@
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
-import { Bell, Heart, Menu, Search, ShoppingBag, User, X } from "lucide-react";
+import {
+  Bell,
+  Heart,
+  Menu,
+  Package,
+  Search,
+  ShoppingBag,
+  Tag,
+  User,
+  X,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { categoriesOptions, unreadCountOptions } from "@/lib/api/queries";
@@ -48,11 +58,12 @@ export function SiteHeader({
       )}
       onMouseLeave={() => setHovered(null)}
     >
-      <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-6 md:h-20 md:px-10">
+      <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-3 md:h-20 md:px-10">
         <div className="flex items-center gap-8">
           <button
-            className="md:hidden"
+            className="-ml-1 grid h-11 w-11 place-items-center md:hidden"
             aria-label="Menu"
+            aria-expanded={menuOpen}
             onClick={() => setMenuOpen((v) => !v)}
           >
             {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -90,11 +101,11 @@ export function SiteHeader({
           </span>
         </Link>
 
-        <div className="flex items-center gap-3 md:gap-5">
+        <div className="flex items-center gap-0 md:gap-2">
           <button
             aria-label="Search"
             onClick={onOpenSearch}
-            className="p-2 hover:text-champagne transition-colors"
+            className="grid h-11 w-11 place-items-center hover:text-champagne transition-colors"
           >
             <Search className="h-4 w-4 md:h-5 md:w-5" />
           </button>
@@ -102,7 +113,7 @@ export function SiteHeader({
             to={signedIn ? "/account" : "/login"}
             search={signedIn ? undefined : { redirect: undefined }}
             aria-label={signedIn ? "Account" : "Sign in"}
-            className="p-2 hover:text-champagne transition-colors hidden sm:inline-flex"
+            className="hidden h-11 w-11 place-items-center hover:text-champagne transition-colors sm:grid"
           >
             <User className="h-4 w-4 md:h-5 md:w-5" />
           </Link>
@@ -110,7 +121,7 @@ export function SiteHeader({
             <Link
               to="/notifications"
               aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ""}`}
-              className="relative p-2 hover:text-champagne transition-colors hidden sm:inline-flex"
+              className="relative hidden h-11 w-11 place-items-center hover:text-champagne transition-colors sm:grid"
             >
               <Bell className="h-4 w-4 md:h-5 md:w-5" />
               {unreadCount > 0 && (
@@ -123,7 +134,7 @@ export function SiteHeader({
           <Link
             to="/wishlist"
             aria-label={`Wishlist${wishlistCount > 0 ? ` (${wishlistCount})` : ""}`}
-            className="relative p-2 hover:text-champagne transition-colors hidden sm:inline-flex"
+            className="relative hidden h-11 w-11 place-items-center hover:text-champagne transition-colors sm:grid"
           >
             <Heart className="h-4 w-4 md:h-5 md:w-5" />
             {wishlistCount > 0 && (
@@ -135,7 +146,7 @@ export function SiteHeader({
           <button
             aria-label={`Bag (${cartCount})`}
             onClick={() => openCart(true)}
-            className="relative p-2 hover:text-champagne transition-colors"
+            className="relative grid h-11 w-11 place-items-center hover:text-champagne transition-colors"
           >
             <ShoppingBag className="h-4 w-4 md:h-5 md:w-5" />
             {cartCount > 0 && (
@@ -213,16 +224,16 @@ export function SiteHeader({
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-border bg-cream text-ink overflow-hidden"
+            className="md:hidden max-h-[calc(100svh-4rem)] overflow-y-auto border-t border-border bg-cream text-ink"
           >
-            <ul className="px-6 py-6 space-y-4">
+            <ul className="px-6 py-4">
               {roots.map((c) => (
                 <li key={c.id}>
                   <Link
                     to="/shop"
                     search={{ category: c.id, sort: "newest" }}
                     onClick={() => setMenuOpen(false)}
-                    className="block text-lg font-display"
+                    className="block py-3 font-display text-lg"
                   >
                     {c.name}
                   </Link>
@@ -233,9 +244,83 @@ export function SiteHeader({
                   to="/shop"
                   search={{ sort: "newest" }}
                   onClick={() => setMenuOpen(false)}
-                  className="block text-lg font-display"
+                  className="block py-3 font-display text-lg"
                 >
                   All
+                </Link>
+              </li>
+            </ul>
+
+            {/* Account surfaces — the header icons for these are hidden below
+                sm, so this is the only way to reach them on a phone. */}
+            <ul className="border-t border-border px-6 py-4">
+              {[
+                {
+                  to: "/wishlist" as const,
+                  label: "Wishlist",
+                  Icon: Heart,
+                  badge: wishlistCount,
+                },
+                ...(signedIn
+                  ? [
+                      {
+                        to: "/notifications" as const,
+                        label: "Notifications",
+                        Icon: Bell,
+                        badge: unreadCount,
+                      },
+                    ]
+                  : []),
+              ].map(({ to, label, Icon, badge }) => (
+                <li key={to}>
+                  <Link
+                    to={to}
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center gap-4 py-3"
+                  >
+                    <Icon className="h-4 w-4 text-champagne" />
+                    <span className="eyebrow text-ink">{label}</span>
+                    {badge > 0 && (
+                      <span className="grid h-5 min-w-5 place-items-center rounded-full bg-champagne px-1.5 text-[11px] font-medium text-ink">
+                        {badge}
+                      </span>
+                    )}
+                  </Link>
+                </li>
+              ))}
+              <li>
+                <Link
+                  to={signedIn ? "/account" : "/login"}
+                  search={signedIn ? undefined : { redirect: undefined }}
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-4 py-3"
+                >
+                  <User className="h-4 w-4 text-champagne" />
+                  <span className="eyebrow text-ink">
+                    {signedIn ? "Account" : "Sign in"}
+                  </span>
+                </Link>
+              </li>
+              {signedIn && (
+                <li>
+                  <Link
+                    to="/orders"
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center gap-4 py-3"
+                  >
+                    <Package className="h-4 w-4 text-champagne" />
+                    <span className="eyebrow text-ink">Orders</span>
+                  </Link>
+                </li>
+              )}
+              <li>
+                <Link
+                  to="/offers"
+                  onClick={() => setMenuOpen(false)}
+                  className="flex items-center gap-4 py-3"
+                >
+                  <Tag className="h-4 w-4 text-champagne" />
+                  <span className="eyebrow text-ink">Offers</span>
                 </Link>
               </li>
             </ul>

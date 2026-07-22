@@ -66,10 +66,14 @@ export function ReturnDialog({
 
   return (
     <div className="fixed inset-0 z-[70] grid place-items-center bg-ink/50 p-4 backdrop-blur-sm">
-      <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto bg-cream p-8">
+      <div className="max-h-[90svh] w-full max-w-lg overflow-y-auto bg-cream p-6 md:p-8">
         <div className="flex items-start justify-between gap-4">
           <h2 className="font-display text-2xl text-ink">Return or exchange</h2>
-          <button onClick={onClose} aria-label="Close">
+          <button
+            onClick={onClose}
+            aria-label="Close"
+            className="-mr-2 -mt-2 grid h-11 w-11 shrink-0 place-items-center"
+          >
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -82,7 +86,7 @@ export function ReturnDialog({
                 key={t}
                 onClick={() => setType(t)}
                 className={cn(
-                  "eyebrow flex-1 border py-3 capitalize transition-colors",
+                  "eyebrow min-h-11 flex-1 border py-3 capitalize transition-colors",
                   type === t ? "border-ink bg-ink text-cream" : "border-border",
                 )}
               >
@@ -138,7 +142,7 @@ export function ReturnDialog({
           <select
             value={reason}
             onChange={(e) => setReason(e.target.value)}
-            className="mt-2 w-full border-b border-border bg-transparent py-3 text-sm text-ink outline-none focus:border-ink"
+            className="mt-2 w-full border-b border-border bg-transparent min-h-11 py-3 text-base text-ink outline-none focus:border-ink md:text-sm"
           >
             {REASONS.map((r) => (
               <option key={r}>{r}</option>
@@ -154,7 +158,7 @@ export function ReturnDialog({
             value={note}
             onChange={(e) => setNote(e.target.value)}
             rows={3}
-            className="mt-2 w-full resize-none border border-border bg-transparent p-3 text-sm text-ink outline-none focus:border-ink"
+            className="mt-2 w-full resize-none border border-border bg-transparent p-3 text-base text-ink outline-none focus:border-ink md:text-sm"
           />
         </label>
 

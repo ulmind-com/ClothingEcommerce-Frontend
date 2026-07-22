@@ -21,7 +21,7 @@ function OrdersPage() {
 
   return (
     <SiteChrome>
-      <section className="mx-auto max-w-[1000px] px-6 py-32 md:px-10">
+      <section className="mx-auto max-w-[1000px] px-5 pb-20 pt-24 md:px-10 md:pb-32 md:pt-32">
         <div className="eyebrow mb-3">Account</div>
         <h1 className="font-display text-4xl text-ink md:text-5xl">Orders</h1>
 
@@ -47,13 +47,13 @@ function OrdersPage() {
                 <Link
                   to="/order/$id"
                   params={{ id: o.id }}
-                  className="flex items-center gap-6 py-6 transition-opacity hover:opacity-70"
+                  className="flex items-center gap-4 py-5 transition-opacity hover:opacity-70 md:gap-6 md:py-6"
                 >
                   <div className="flex -space-x-4">
                     {o.items.slice(0, 3).map((it, i) => (
                       <div
                         key={i}
-                        className="h-20 w-14 shrink-0 overflow-hidden border border-cream bg-secondary"
+                        className="h-16 w-11 shrink-0 overflow-hidden border border-cream bg-secondary md:h-20 md:w-14"
                       >
                         {it.image && (
                           <img
@@ -67,7 +67,7 @@ function OrdersPage() {
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-3">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                       <span className="eyebrow text-ink">#{shortId(o.id)}</span>
                       <OrderStatusPill status={o.status} />
                     </div>
@@ -100,7 +100,7 @@ function OrdersPage() {
           </ul>
         )}
 
-        <div className="mt-12 flex gap-8">
+        <div className="mt-12 flex flex-wrap gap-x-8 gap-y-2">
           <Link to="/returns" className="eyebrow text-ink hover:text-champagne">
             Returns &amp; refunds →
           </Link>

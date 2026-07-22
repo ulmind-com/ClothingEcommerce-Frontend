@@ -42,7 +42,7 @@ function NotificationsPage() {
 
   return (
     <SiteChrome>
-      <section className="mx-auto max-w-[800px] px-6 py-32 md:px-10">
+      <section className="mx-auto max-w-[800px] px-5 pb-20 pt-24 md:px-10 md:pb-32 md:pt-32">
         <div className="eyebrow mb-3">Account</div>
         <h1 className="font-display text-4xl text-ink md:text-5xl">
           Notifications
