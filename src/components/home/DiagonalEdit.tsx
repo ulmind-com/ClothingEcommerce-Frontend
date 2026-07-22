@@ -11,22 +11,31 @@ import d5 from "@/assets/diagonal-5.jpeg.asset.json";
 import d6 from "@/assets/diagonal-6.jpeg.asset.json";
 import d7 from "@/assets/diagonal-7.jpeg.asset.json";
 
+import { useSectionMedia } from "@/hooks/use-section-media";
+
 const AUTOPLAY_MS = 2600;
 
-const EDIT: { src: string; title: string; caption: string }[] = [
-  { src: d1.url, title: "Mirror Bloom Lehenga", caption: "Hand-mirrored, garden-bloomed" },
-  { src: d2.url, title: "Sage Reflection Saree", caption: "Organza, poured like water" },
-  { src: d3.url, title: "Gilded Corridor", caption: "Sequined dusk, twinned" },
-  { src: d4.url, title: "Nocturne Couture Gown", caption: "Salon-hour glimmer" },
-  { src: d5.url, title: "Everyday Ivory", caption: "Casual, quietly composed" },
-  { src: d6.url, title: "Pattachitra Bridal", caption: "Painted heirloom, worn today" },
-  { src: d7.url, title: "Crimson Anarkali", caption: "Old doors, new silhouettes" },
+/** Shipped artwork — the admin's "diagonal_edit" uploads override these. */
+const FALLBACK: { src: string; title: string; caption: string; alt: string }[] = [
+  { src: d1.url, title: "Mirror Bloom Lehenga", caption: "Hand-mirrored, garden-bloomed", alt: "Mirror Bloom Lehenga" },
+  { src: d2.url, title: "Sage Reflection Saree", caption: "Organza, poured like water", alt: "Sage Reflection Saree" },
+  { src: d3.url, title: "Gilded Corridor", caption: "Sequined dusk, twinned", alt: "Gilded Corridor" },
+  { src: d4.url, title: "Nocturne Couture Gown", caption: "Salon-hour glimmer", alt: "Nocturne Couture Gown" },
+  { src: d5.url, title: "Everyday Ivory", caption: "Casual, quietly composed", alt: "Everyday Ivory" },
+  { src: d6.url, title: "Pattachitra Bridal", caption: "Painted heirloom, worn today", alt: "Pattachitra Bridal" },
+  { src: d7.url, title: "Crimson Anarkali", caption: "Old doors, new silhouettes", alt: "Crimson Anarkali" },
 ];
 
 export function DiagonalEdit() {
+  const media = useSectionMedia("diagonal_edit", FALLBACK);
   const items = useMemo<DiagonalCarouselItem[]>(
-    () => EDIT.map((e) => ({ src: e.src, title: e.title, alt: e.title })),
-    [],
+    () =>
+      media.map((m, i) => ({
+        src: m.src,
+        title: m.title ?? FALLBACK[i]?.title ?? "",
+        alt: m.alt,
+      })),
+    [media],
   );
 
   const [index, setIndex] = useState(0);
@@ -41,7 +50,12 @@ export function DiagonalEdit() {
     return () => window.clearInterval(id);
   }, [reduce, items.length]);
 
-  const active = EDIT[index];
+  // An uploaded slide carries its own caption; otherwise keep the shipped copy.
+  const slot = media[index];
+  const active = {
+    title: slot?.title ?? FALLBACK[index]?.title ?? "",
+    caption: slot?.subtitle ?? FALLBACK[index]?.caption ?? "",
+  };
 
   return (
     <section

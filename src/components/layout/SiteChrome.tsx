@@ -2,6 +2,7 @@ import { useState, type ReactNode } from "react";
 import { SiteHeader } from "./SiteHeader";
 import { SiteFooter } from "./SiteFooter";
 import { SearchOverlay } from "./SearchOverlay";
+import { CartDrawer } from "@/components/cart/CartDrawer";
 
 export function SiteChrome({
   children,
@@ -18,6 +19,7 @@ export function SiteChrome({
         onOpenSearch={() => setSearch(true)}
       />
       <SearchOverlay open={search} onClose={() => setSearch(false)} />
+      <CartDrawer />
       <main>{children}</main>
       <SiteFooter />
     </>

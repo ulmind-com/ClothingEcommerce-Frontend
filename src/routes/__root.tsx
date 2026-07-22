@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { LenisProvider } from "../lib/motion/LenisProvider";
+import { AuthProvider } from "../lib/auth/AuthProvider";
 import { Toaster } from "react-hot-toast";
 
 function NotFoundComponent() {
@@ -103,7 +104,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      // Maison monogram, squared from public/logo.jpeg with white padding.
+      { rel: "icon", href: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+      { rel: "icon", href: "/icon-192.png", type: "image/png", sizes: "192x192" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png", sizes: "180x180" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
       {
@@ -137,23 +141,25 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <LenisProvider>
-        <Outlet />
-        <Toaster
-          position="bottom-center"
-          toastOptions={{
-            style: {
-              background: "oklch(0.16 0.005 60)",
-              color: "oklch(0.965 0.012 85)",
-              borderRadius: 0,
-              fontSize: "0.75rem",
-              letterSpacing: "0.2em",
-              textTransform: "uppercase",
-              padding: "14px 20px",
-            },
-          }}
-        />
-      </LenisProvider>
+      <AuthProvider>
+        <LenisProvider>
+          <Outlet />
+          <Toaster
+            position="bottom-center"
+            toastOptions={{
+              style: {
+                background: "oklch(0.16 0.005 60)",
+                color: "oklch(0.965 0.012 85)",
+                borderRadius: 0,
+                fontSize: "0.75rem",
+                letterSpacing: "0.2em",
+                textTransform: "uppercase",
+                padding: "14px 20px",
+              },
+            }}
+          />
+        </LenisProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

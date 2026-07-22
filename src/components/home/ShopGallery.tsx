@@ -15,6 +15,7 @@ import { productImage } from "@/lib/utils/product";
 import { formatPrice } from "@/lib/utils/format";
 import { useCart } from "@/lib/cart/store";
 import { Reveal } from "@/lib/motion/Reveal";
+import { useSectionMedia } from "@/hooks/use-section-media";
 import type { Category, Product } from "@/types/api";
 import pillWomenGalleryAsset from "@/assets/pill-women-gallery.jpeg.asset.json";
 import pillChildrenFashionAsset from "@/assets/pill-children-fashion.jpeg.asset.json";
@@ -132,12 +133,13 @@ const PILL_LABELS = [
   "Women's Fashion",
 ];
 
-const PILL_FALLBACK_IMAGES = [
+/** Shipped artwork — the admin's "shop_gallery" uploads override these. */
+const PILL_FALLBACK = [
   pillWomenGallery,
   pillChildrenFashion,
   pillMensFashion,
   pillWomensFashion,
-];
+].map((src, i) => ({ src, alt: PILL_LABELS[i] }));
 
 const PILL_GRADIENTS = [
   "from-[oklch(0.82_0.09_80)] to-[oklch(0.74_0.12_78)]",
@@ -153,18 +155,23 @@ export function ShopGallery() {
   const [activeCard, setActiveCard] = useState<string | null>(null);
   const addToCart = useCart((s) => s.add);
 
-  const pillTiles = useMemo(() => {
-    const base = PILL_LABELS.map((label, i) => {
-      const cat = categories[i] as Category | undefined;
-      return {
-        label,
-        image: PILL_FALLBACK_IMAGES[i],
-        categoryId: cat?.id,
-        gradient: PILL_GRADIENTS[i % PILL_GRADIENTS.length],
-      };
-    });
-    return base;
-  }, [categories]);
+  const pillMedia = useSectionMedia("shop_gallery", PILL_FALLBACK);
+
+  const pillTiles = useMemo(
+    () =>
+      pillMedia.map((m, i) => {
+        const cat = categories[i] as Category | undefined;
+        return {
+          // An uploaded pill carries its own caption; otherwise keep the
+          // shipped label.
+          label: m.title ?? PILL_LABELS[i] ?? "",
+          image: m.src,
+          categoryId: cat?.id,
+          gradient: PILL_GRADIENTS[i % PILL_GRADIENTS.length],
+        };
+      }),
+    [pillMedia, categories],
+  );
 
   const categoryById = useMemo(() => {
     const m = new Map<string, Category>();
@@ -208,7 +215,11 @@ export function ShopGallery() {
             <Reveal key={`${tile.label}-${i}`} delay={i}>
               <Link
                 to="/shop"
-                search={tile.categoryId ? { category: tile.categoryId } : {}}
+                search={
+                  tile.categoryId
+                    ? { category: tile.categoryId, sort: "newest" as const }
+                    : { sort: "newest" as const }
+                }
                 className={`group relative flex items-center gap-3 rounded-full overflow-hidden pl-2 pr-4 md:pr-5 h-20 md:h-24 bg-gradient-to-r ${tile.gradient} text-cream shadow-[0_10px_30px_-15px_rgba(190,140,50,0.45)] transition-transform duration-500 hover:-translate-y-0.5`}
               >
                 <div className="relative h-16 md:h-20 w-16 md:w-20 shrink-0 rounded-full overflow-hidden ring-2 ring-cream/40 bg-cream/20">

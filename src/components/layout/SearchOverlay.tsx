@@ -25,11 +25,14 @@ export function SearchOverlay({
     enabled: open,
   });
 
-  const { data: results = [], isFetching } = useQuery({
+  // /search returns { products, total, facets } — not a bare array.
+  const { data, isFetching } = useQuery({
     queryKey: ["search", "live", q],
-    queryFn: () => get<Product[]>("/search", { q, limit: 6 }),
+    queryFn: () =>
+      get<{ products: Product[]; total: number }>("/search", { q, limit: 6 }),
     enabled: open && q.trim().length > 1,
   });
+  const results = data?.products ?? [];
 
   useEffect(() => {
     if (!open) setQ("");

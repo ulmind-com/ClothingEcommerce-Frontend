@@ -1,5 +1,10 @@
 import { queryOptions, infiniteQueryOptions } from "@tanstack/react-query";
 import { get } from "./client";
+import { fetchMe } from "./auth";
+import { fetchCodAvailability, fetchOrder, fetchOrders } from "./orders";
+import { fetchActiveCoupons } from "./coupons";
+import { fetchReturns } from "./returns";
+import { fetchNotifications, fetchUnreadCount } from "./notifications";
 import type {
   Banner,
   Category,
@@ -8,7 +13,7 @@ import type {
   Review,
   ReviewSummary,
   Settings,
-  VideoItem,
+  Wishlist,
 } from "@/types/api";
 
 export const qk = {
@@ -26,28 +31,115 @@ export const qk = {
   product: (id: string) => ["products", id] as const,
   reviews: (id: string) => ["reviews", id] as const,
   reviewSummary: (id: string) => ["reviews", "summary", id] as const,
+  wishlist: ["wishlist"] as const,
   wishlistIds: ["wishlist", "ids"] as const,
   me: ["auth", "me"] as const,
-  videos: ["videos"] as const,
+  orders: ["orders"] as const,
+  order: (id: string) => ["orders", id] as const,
+  returns: ["returns"] as const,
+  codAvailability: ["orders", "cod-availability"] as const,
+  activeCoupons: ["coupons", "active"] as const,
+  notifications: ["notifications"] as const,
+  unreadCount: ["notifications", "unread-count"] as const,
 };
+
+/**
+ * Account-only queries take `enabled` from the caller (the auth store) so they
+ * stay idle — and don't fire a doomed 401 — while signed out.
+ */
+export const meOptions = (enabled: boolean) =>
+  queryOptions({
+    queryKey: qk.me,
+    queryFn: fetchMe,
+    enabled,
+    staleTime: 5 * 60_000,
+    retry: false,
+  });
+
+export const wishlistOptions = (enabled: boolean) =>
+  queryOptions({
+    queryKey: qk.wishlist,
+    queryFn: () => get<Wishlist>("/wishlist"),
+    enabled,
+    staleTime: 30_000,
+    retry: false,
+  });
+
+export const wishlistIdsOptions = (enabled: boolean) =>
+  queryOptions({
+    queryKey: qk.wishlistIds,
+    queryFn: () => get<{ ids: string[] }>("/wishlist/ids"),
+    enabled,
+    staleTime: 30_000,
+    retry: false,
+  });
+
+export const ordersOptions = (enabled: boolean) =>
+  queryOptions({
+    queryKey: qk.orders,
+    queryFn: fetchOrders,
+    enabled,
+    staleTime: 15_000,
+    retry: false,
+  });
+
+export const orderOptions = (id: string, enabled: boolean) =>
+  queryOptions({
+    queryKey: qk.order(id),
+    queryFn: () => fetchOrder(id),
+    enabled,
+    staleTime: 15_000,
+    retry: false,
+  });
+
+export const returnsOptions = (enabled: boolean) =>
+  queryOptions({
+    queryKey: qk.returns,
+    queryFn: fetchReturns,
+    enabled,
+    staleTime: 15_000,
+    retry: false,
+  });
+
+export const codAvailabilityOptions = (enabled: boolean) =>
+  queryOptions({
+    queryKey: qk.codAvailability,
+    queryFn: fetchCodAvailability,
+    enabled,
+    staleTime: 60_000,
+    retry: false,
+  });
+
+/** Public — anonymous visitors just don't see first-order-only coupons. */
+export const activeCouponsOptions = () =>
+  queryOptions({
+    queryKey: qk.activeCoupons,
+    queryFn: fetchActiveCoupons,
+    staleTime: 60_000,
+  });
+
+export const notificationsOptions = (enabled: boolean) =>
+  queryOptions({
+    queryKey: qk.notifications,
+    queryFn: () => fetchNotifications(30),
+    enabled,
+    staleTime: 15_000,
+    retry: false,
+  });
+
+export const unreadCountOptions = (enabled: boolean) =>
+  queryOptions({
+    queryKey: qk.unreadCount,
+    queryFn: fetchUnreadCount,
+    enabled,
+    staleTime: 30_000,
+    retry: false,
+  });
 
 export const bannersOptions = () =>
   queryOptions({
     queryKey: qk.banners,
     queryFn: () => get<Banner[]>("/banners"),
-    staleTime: 60_000,
-  });
-
-export const videosOptions = () =>
-  queryOptions({
-    queryKey: qk.videos,
-    queryFn: async () => {
-      try {
-        return await get<VideoItem[]>("/videos");
-      } catch {
-        return [] as VideoItem[];
-      }
-    },
     staleTime: 60_000,
   });
 

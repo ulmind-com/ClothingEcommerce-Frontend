@@ -18,6 +18,7 @@ import { MaskReveal, Reveal } from "@/lib/motion/Reveal";
 import { discountPct, formatPrice } from "@/lib/utils/format";
 import { productImage } from "@/lib/utils/product";
 import { useCart } from "@/lib/cart/store";
+import { ReviewForm } from "@/components/product/ReviewForm";
 
 export const Route = createFileRoute("/product/$id")({
   loader: async ({ context, params }) => {
@@ -270,12 +271,13 @@ function ProductPage() {
           </div>
         </div>
 
-        {/* Reviews */}
-        {reviews.length > 0 && (
-          <section className="mt-24 md:mt-32 border-t border-border">
-            <div className="mx-auto max-w-[1400px] px-6 md:px-10 py-16">
-              <div className="eyebrow mb-3">Client Journal</div>
-              <h2 className="font-display text-4xl md:text-5xl">Reviews</h2>
+        {/* Reviews — always rendered so the write form is reachable on a
+            product that has no reviews yet. */}
+        <section className="mt-24 md:mt-32 border-t border-border">
+          <div className="mx-auto max-w-[1400px] px-6 md:px-10 py-16">
+            <div className="eyebrow mb-3">Client Journal</div>
+            <h2 className="font-display text-4xl md:text-5xl">Reviews</h2>
+            {reviews.length > 0 ? (
               <div className="mt-10 grid gap-8 md:grid-cols-2">
                 {reviews.slice(0, 6).map((r) => (
                   <Reveal key={r.id}>
@@ -290,9 +292,14 @@ function ProductPage() {
                   </Reveal>
                 ))}
               </div>
-            </div>
-          </section>
-        )}
+            ) : (
+              <p className="mt-8 text-sm text-warm-gray">
+                No reviews yet — be the first once you've received yours.
+              </p>
+            )}
+            <ReviewForm productId={id} />
+          </div>
+        </section>
 
         {/* Similar */}
         {similar.length > 0 && (

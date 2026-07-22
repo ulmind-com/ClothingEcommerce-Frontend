@@ -25,6 +25,15 @@ export function setToken(token: string | null) {
   }
 }
 
+// The auth store registers here so a 401 anywhere can drop it back to signed
+// out. Kept as a callback so client.ts stays free of store imports (the store
+// imports this module).
+let onUnauthorized: (() => void) | null = null;
+
+export function setUnauthorizedHandler(fn: (() => void) | null) {
+  onUnauthorized = fn;
+}
+
 export const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30_000,
@@ -39,14 +48,42 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+/** A single entry of FastAPI's 422 validation payload. */
+interface ValidationIssue {
+  loc?: (string | number)[];
+  msg?: string;
+  type?: string;
+}
+
+/**
+ * FastAPI sends `detail` as a string for raised HTTPExceptions but as an array
+ * of issue objects for 422 validation errors. Stringifying the array directly
+ * yields "[object Object]", so flatten it into readable text.
+ */
+function readDetail(detail: unknown): string | null {
+  if (typeof detail === "string") return detail;
+  if (Array.isArray(detail)) {
+    const messages = (detail as ValidationIssue[])
+      .map((issue) => {
+        const field = issue.loc?.filter((p) => p !== "body").join(".");
+        const msg = issue.msg ?? "is invalid";
+        return field ? `${field}: ${msg}` : msg;
+      })
+      .filter(Boolean);
+    if (messages.length) return messages.join("\n");
+  }
+  return null;
+}
+
 api.interceptors.response.use(
   (r) => r,
-  (error: AxiosError<{ detail?: string; message?: string }>) => {
+  (error: AxiosError<{ detail?: unknown; message?: string }>) => {
     if (error.response?.status === 401) {
       setToken(null);
+      onUnauthorized?.();
     }
     const detail =
-      error.response?.data?.detail ||
+      readDetail(error.response?.data?.detail) ||
       error.response?.data?.message ||
       error.message ||
       "Request failed";
@@ -61,6 +98,11 @@ export async function get<T>(url: string, params?: Record<string, unknown>) {
 
 export async function post<T>(url: string, body?: unknown) {
   const { data } = await api.post<T>(url, body);
+  return data;
+}
+
+export async function patch<T>(url: string, body?: unknown) {
+  const { data } = await api.patch<T>(url, body);
   return data;
 }
 

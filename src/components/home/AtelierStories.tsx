@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/lib/motion/Reveal";
+import { useSectionMedia } from "@/hooks/use-section-media";
 import a1 from "@/assets/atelier-new-1.jpeg.asset.json";
 import a2 from "@/assets/atelier-new-2.jpeg.asset.json";
 import a3 from "@/assets/atelier-new-3.jpeg.asset.json";
@@ -11,7 +12,9 @@ import a6 from "@/assets/atelier-new-6.jpeg.asset.json";
 import a7 from "@/assets/atelier-new-7.jpeg.asset.json";
 import a8 from "@/assets/atelier-new-8.jpeg.asset.json";
 
-const IMAGES: { src: string; alt: string }[] = [
+/** Shipped artwork — admin uploads in the "atelier_stories" section override
+    these slot by slot (see useSectionMedia). */
+const FALLBACK: { src: string; alt: string }[] = [
   { src: a1.url, alt: "Peach sequined saree against a lattice screen" },
   { src: a2.url, alt: "Beige tailored suit, editorial menswear" },
   { src: a3.url, alt: "Linen shirt and chinos, coffee-hour ease" },
@@ -45,7 +48,8 @@ function ArrowSwirlRight() {
 }
 
 export function AtelierStories() {
-  const strip = [...IMAGES, ...IMAGES];
+  const images = useSectionMedia("atelier_stories", FALLBACK);
+  const strip = [...images, ...images];
   return (
     <section className="relative overflow-hidden bg-cream py-24 md:py-32">
       <div className="pointer-events-none absolute inset-0 opacity-[0.05] mix-blend-multiply silk-grain" />
@@ -92,6 +96,7 @@ export function AtelierStories() {
           <div className="mt-8 flex justify-center">
             <Link
               to="/shop"
+              search={{ sort: "newest" }}
               className="group inline-flex items-center gap-2 rounded-full bg-ink text-cream px-7 py-3.5 text-sm tracking-[0.18em] uppercase font-medium transition-all duration-500 hover:bg-champagne hover:text-ink shadow-[0_20px_50px_-20px_rgba(0,0,0,0.4)]"
             >
               Explore the House

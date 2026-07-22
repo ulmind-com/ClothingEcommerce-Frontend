@@ -3,7 +3,8 @@ import { motion } from "framer-motion";
 import { Heart } from "lucide-react";
 import type { Product } from "@/types/api";
 import { productImage, productHoverImage } from "@/lib/utils/product";
-import { discountPct, formatPrice } from "@/lib/utils/format";
+import { cn, discountPct, formatPrice } from "@/lib/utils/format";
+import { useWishlist } from "@/hooks/use-wishlist";
 
 export function ProductCard({
   product,
@@ -17,6 +18,8 @@ export function ProductCard({
   const main = productImage(product);
   const hover = productHoverImage(product);
   const off = discountPct(product.mrp, product.price);
+  const wishlist = useWishlist();
+  const saved = wishlist.has(product.id);
 
   return (
     <motion.div
@@ -66,13 +69,21 @@ export function ProductCard({
 
           <button
             type="button"
-            aria-label="Add to wishlist"
+            aria-label={saved ? "Remove from wishlist" : "Add to wishlist"}
+            aria-pressed={saved}
             onClick={(e) => {
               e.preventDefault();
+              e.stopPropagation();
+              wishlist.toggle(product.id);
             }}
-            className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full bg-cream/85 text-ink backdrop-blur transition-colors hover:bg-ink hover:text-cream"
+            className={cn(
+              "absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full backdrop-blur transition-colors",
+              saved
+                ? "bg-ink text-cream"
+                : "bg-cream/85 text-ink hover:bg-ink hover:text-cream",
+            )}
           >
-            <Heart className="h-4 w-4" />
+            <Heart className={cn("h-4 w-4", saved && "fill-current")} />
           </button>
 
           <div className="absolute inset-x-4 bottom-4 flex translate-y-4 items-center justify-between gap-2 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">

@@ -1,10 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { AnimatePresence, motion } from "framer-motion";
-import { Heart, Menu, Search, ShoppingBag, User, X } from "lucide-react";
+import { Bell, Heart, Menu, Search, ShoppingBag, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { categoriesOptions } from "@/lib/api/queries";
+import { categoriesOptions, unreadCountOptions } from "@/lib/api/queries";
 import { useCart } from "@/lib/cart/store";
+import { useAuth } from "@/lib/auth/store";
+import { useWishlist } from "@/hooks/use-wishlist";
 import { cn } from "@/lib/utils/format";
 
 export function SiteHeader({
@@ -19,6 +21,11 @@ export function SiteHeader({
   const [hovered, setHovered] = useState<string | null>(null);
   const { data: categories = [] } = useQuery(categoriesOptions());
   const cartCount = useCart((s) => s.lines.reduce((n, l) => n + l.quantity, 0));
+  const openCart = useCart((s) => s.setOpen);
+  const signedIn = useAuth((s) => Boolean(s.token));
+  const wishlistCount = useWishlist().ids.length;
+  const { data: unread } = useQuery(unreadCountOptions(signedIn));
+  const unreadCount = unread?.count ?? 0;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -59,7 +66,7 @@ export function SiteHeader({
               >
                 <Link
                   to="/shop"
-                  search={{ category: c.id }}
+                  search={{ category: c.id, sort: "newest" }}
                   className="eyebrow hover:text-champagne transition-colors"
                 >
                   {c.name}
@@ -68,6 +75,7 @@ export function SiteHeader({
             ))}
             <Link
               to="/shop"
+              search={{ sort: "newest" }}
               className="eyebrow hover:text-champagne transition-colors"
               onMouseEnter={() => setHovered(null)}
             >
@@ -91,21 +99,42 @@ export function SiteHeader({
             <Search className="h-4 w-4 md:h-5 md:w-5" />
           </button>
           <Link
-            to="/"
-            aria-label="Account"
+            to={signedIn ? "/account" : "/login"}
+            search={signedIn ? undefined : { redirect: undefined }}
+            aria-label={signedIn ? "Account" : "Sign in"}
             className="p-2 hover:text-champagne transition-colors hidden sm:inline-flex"
           >
             <User className="h-4 w-4 md:h-5 md:w-5" />
           </Link>
+          {signedIn && (
+            <Link
+              to="/notifications"
+              aria-label={`Notifications${unreadCount > 0 ? ` (${unreadCount} unread)` : ""}`}
+              className="relative p-2 hover:text-champagne transition-colors hidden sm:inline-flex"
+            >
+              <Bell className="h-4 w-4 md:h-5 md:w-5" />
+              {unreadCount > 0 && (
+                <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-champagne px-1 text-[10px] font-medium text-ink">
+                  {unreadCount}
+                </span>
+              )}
+            </Link>
+          )}
           <Link
-            to="/"
-            aria-label="Wishlist"
-            className="p-2 hover:text-champagne transition-colors hidden sm:inline-flex"
+            to="/wishlist"
+            aria-label={`Wishlist${wishlistCount > 0 ? ` (${wishlistCount})` : ""}`}
+            className="relative p-2 hover:text-champagne transition-colors hidden sm:inline-flex"
           >
             <Heart className="h-4 w-4 md:h-5 md:w-5" />
+            {wishlistCount > 0 && (
+              <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-champagne px-1 text-[10px] font-medium text-ink">
+                {wishlistCount}
+              </span>
+            )}
           </Link>
           <button
             aria-label={`Bag (${cartCount})`}
+            onClick={() => openCart(true)}
             className="relative p-2 hover:text-champagne transition-colors"
           >
             <ShoppingBag className="h-4 w-4 md:h-5 md:w-5" />
@@ -141,7 +170,7 @@ export function SiteHeader({
                       <li key={child.id}>
                         <Link
                           to="/shop"
-                          search={{ category: child.id }}
+                          search={{ category: child.id, sort: "newest" }}
                           className="text-sm hover:text-champagne transition-colors"
                         >
                           {child.name}
@@ -158,7 +187,7 @@ export function SiteHeader({
                     <Link
                       key={c.id}
                       to="/shop"
-                      search={{ category: c.id }}
+                      search={{ category: c.id, sort: "newest" }}
                       className="group relative aspect-[16/9] overflow-hidden bg-secondary"
                     >
                       <img
@@ -191,7 +220,7 @@ export function SiteHeader({
                 <li key={c.id}>
                   <Link
                     to="/shop"
-                    search={{ category: c.id }}
+                    search={{ category: c.id, sort: "newest" }}
                     onClick={() => setMenuOpen(false)}
                     className="block text-lg font-display"
                   >
@@ -202,6 +231,7 @@ export function SiteHeader({
               <li>
                 <Link
                   to="/shop"
+                  search={{ sort: "newest" }}
                   onClick={() => setMenuOpen(false)}
                   className="block text-lg font-display"
                 >

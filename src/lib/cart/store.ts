@@ -16,6 +16,12 @@ interface CartState {
   open: boolean;
   add: (line: CartLine) => void;
   remove: (productId: string, color?: string, size?: string) => void;
+  setQty: (
+    productId: string,
+    quantity: number,
+    color?: string,
+    size?: string,
+  ) => void;
   clear: () => void;
   setOpen: (v: boolean) => void;
   count: () => number;
@@ -50,6 +56,19 @@ export const useCart = create<CartState>()(
             (l) => lineKey(l) !== lineKey({ productId, color, size }),
           ),
         })),
+      setQty: (productId, quantity, color, size) =>
+        set((s) => {
+          const key = lineKey({ productId, color, size });
+          // Dropping to zero removes the line rather than leaving an empty one.
+          if (quantity < 1) {
+            return { lines: s.lines.filter((l) => lineKey(l) !== key) };
+          }
+          return {
+            lines: s.lines.map((l) =>
+              lineKey(l) === key ? { ...l, quantity } : l,
+            ),
+          };
+        }),
       clear: () => set({ lines: [] }),
       setOpen: (v) => set({ open: v }),
       count: () => get().lines.reduce((n, l) => n + l.quantity, 0),

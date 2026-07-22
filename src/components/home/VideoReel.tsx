@@ -1,8 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { videosOptions } from "@/lib/api/queries";
-import type { VideoItem } from "@/types/api";
+import { useSectionMedia, type MediaSlot } from "@/hooks/use-section-media";
 import { MaskReveal } from "@/lib/motion/Reveal";
 import reel1 from "@/assets/reel-1.mp4.asset.json";
 import reel2 from "@/assets/reel-2.mp4.asset.json";
@@ -11,14 +9,13 @@ import reel4 from "@/assets/reel-4.mp4.asset.json";
 import reel5 from "@/assets/reel-5.mp4.asset.json";
 import reel6 from "@/assets/reel-6.mp4.asset.json";
 
-const FALLBACK: VideoItem[] = [reel1, reel2, reel3, reel4, reel5, reel6].map((a, i) => ({
-  id: `fallback-${i + 1}`,
-  video_url: a.url,
-  order: i,
-  active: true,
+/** Shipped clips — the admin's "video_reel" uploads override these. */
+const FALLBACK = [reel1, reel2, reel3, reel4, reel5, reel6].map((a, i) => ({
+  src: a.url,
+  alt: `Maison reel ${i + 1}`,
 }));
 
-function ReelCard({ item }: { item: VideoItem }) {
+function ReelCard({ item }: { item: MediaSlot }) {
   const ref = useRef<HTMLVideoElement>(null);
   useEffect(() => {
     const v = ref.current;
@@ -31,11 +28,12 @@ function ReelCard({ item }: { item: VideoItem }) {
   return (
     <Link
       to="/shop"
+      search={{ sort: "newest" }}
       className="group relative block shrink-0 w-[180px] md:w-[220px] aspect-[9/16] overflow-hidden bg-ink border border-border/40 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.5)] transition-all duration-700 hover:shadow-[0_30px_80px_-20px_rgba(180,140,80,0.35)] hover:border-champagne/60"
     >
       <video
         ref={ref}
-        src={item.video_url}
+        src={item.src}
         poster={item.poster}
         muted
         loop
@@ -50,8 +48,7 @@ function ReelCard({ item }: { item: VideoItem }) {
 }
 
 export function VideoReel() {
-  const { data: videos = [] } = useQuery(videosOptions());
-  const source = videos.length > 0 ? videos : FALLBACK;
+  const source = useSectionMedia("video_reel", FALLBACK);
   const [paused, setPaused] = useState(false);
   const reduce =
     typeof window !== "undefined" &&
@@ -90,7 +87,7 @@ export function VideoReel() {
           }}
         >
           {loop.map((item, i) => (
-            <ReelCard key={`${item.id}-${i}`} item={item} />
+            <ReelCard key={`${item.src}-${i}`} item={item} />
           ))}
         </div>
       </div>

@@ -186,6 +186,7 @@ function Hero() {
           >
             <LuxLink
               to="/shop"
+              search={{ sort: "newest" }}
               variant="solid"
               className="bg-ink text-cream border border-cream/20 shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)] hover:bg-champagne hover:text-ink hover:border-champagne"
             >
@@ -193,6 +194,7 @@ function Hero() {
             </LuxLink>
             <LuxLink
               to="/shop"
+              search={{ sort: "newest" }}
               variant="outline"
               className="!bg-transparent !text-cream border-white/80 shadow-[0_8px_30px_-10px_rgba(0,0,0,0.5)] backdrop-blur-sm hover:bg-cream/10 hover:!text-cream hover:border-white"
             >
@@ -276,7 +278,11 @@ function CategoriesBento() {
           <Reveal key={tile.label} delay={i}>
             <Link
               to="/shop"
-              search={tile.categoryId ? { category: tile.categoryId } : {}}
+              search={
+                tile.categoryId
+                  ? { category: tile.categoryId, sort: "newest" as const }
+                  : { sort: "newest" as const }
+              }
               className="group relative block aspect-[3/5] overflow-hidden bg-secondary"
             >
               <img
@@ -296,6 +302,7 @@ function CategoriesBento() {
       <div className="mt-14 md:mt-20 flex justify-center">
         <Link
           to="/shop"
+          search={{ sort: "newest" }}
           className="eyebrow relative inline-block pb-1 after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-ink hover:text-champagne hover:after:bg-champagne transition-colors"
         >
           View all
@@ -323,6 +330,7 @@ function NewArrivalsRail() {
         <div className="mt-14 flex justify-center">
           <Link
             to="/shop"
+            search={{ sort: "newest" }}
             className="eyebrow relative inline-flex items-center gap-2 pb-1 after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-ink hover:text-champagne hover:after:bg-champagne transition-colors"
           >
             See more <ArrowRight className="h-3 w-3" />
@@ -390,7 +398,7 @@ function SectionBlock({ section }: { section: HomeSection }) {
             <div className="eyebrow mb-3">{section.type || "Curated"}</div>
             <h2 className="font-display text-4xl md:text-5xl">{section.title}</h2>
           </div>
-          <Link to="/shop" className="eyebrow hover:text-champagne">
+          <Link to="/shop" search={{ sort: "newest" }} className="eyebrow hover:text-champagne">
             Explore →
           </Link>
         </div>

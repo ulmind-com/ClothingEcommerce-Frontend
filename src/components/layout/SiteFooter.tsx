@@ -40,10 +40,10 @@ export function SiteFooter() {
           <div>
             <div className="eyebrow text-ink/60 mb-5">Shop</div>
             <ul className="space-y-3 text-sm">
-              <li><Link to="/shop" className="text-ink/80 hover:text-ink">New Arrivals</Link></li>
-              <li><Link to="/shop" className="text-ink/80 hover:text-ink">Women</Link></li>
-              <li><Link to="/shop" className="text-ink/80 hover:text-ink">Men</Link></li>
-              <li><Link to="/shop" className="text-ink/80 hover:text-ink">Collections</Link></li>
+              <li><Link to="/shop" search={{ sort: "newest" }} className="text-ink/80 hover:text-ink">New Arrivals</Link></li>
+              <li><Link to="/shop" search={{ sort: "newest" }} className="text-ink/80 hover:text-ink">Women</Link></li>
+              <li><Link to="/shop" search={{ sort: "newest" }} className="text-ink/80 hover:text-ink">Men</Link></li>
+              <li><Link to="/shop" search={{ sort: "newest" }} className="text-ink/80 hover:text-ink">Collections</Link></li>
             </ul>
           </div>
           <div>

@@ -14,14 +14,30 @@ import {
   HalfMoon,
   Sparkle,
 } from "./couture-shapes";
+import { useSectionMedia } from "@/hooks/use-section-media";
 import atelier1 from "@/assets/atelier-1.jpeg.asset.json";
 import atelier2 from "@/assets/atelier-2.jpeg.asset.json";
 
+/** Shipped stills — the admin's "couture_simplicity" uploads override these. */
+const ATELIER_FALLBACK = [
+  { src: atelier1.url, alt: "Atelier detail" },
+  { src: atelier2.url, alt: "Atelier detail" },
+];
+
 export function CoutureSimplicity() {
   const { data: products = [] } = useQuery(productsOptions({ limit: 12 }));
-  const main = (products[0] && productImage(products[0])) || atelier1.url;
-  const inset1 = (products[1] && productImage(products[1])) || atelier2.url;
-  const inset2 = (products[2] && productImage(products[2])) || atelier1.url;
+  // Admin uploads win, then the catalogue, then the shipped atelier stills.
+  const media = useSectionMedia("couture_simplicity", ATELIER_FALLBACK);
+  const main =
+    (media[0].managed ? media[0].src : null) ??
+    (products[0] && productImage(products[0])) ??
+    media[0].src;
+  const inset1 =
+    (media[1].managed ? media[1].src : null) ??
+    (products[1] && productImage(products[1])) ??
+    media[1].src;
+  const inset2 =
+    (products[2] && productImage(products[2])) || media[0].src;
 
   return (
     <section className="relative overflow-hidden bg-[#F7F1E4] py-20 md:py-28">
