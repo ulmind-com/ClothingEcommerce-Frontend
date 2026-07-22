@@ -1,15 +1,16 @@
 import { Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
-import { bannersOptions } from "@/lib/api/queries";
+import authEditorial from "@/assets/atelier-new-7.jpeg.asset.json";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 /**
- * Split editorial layout for the auth screens. The campaign image is whatever
- * banner the admin has pinned first, so the sign-in page moves with the rest
- * of the storefront instead of holding a hardcoded asset.
+ * Split editorial layout for the auth screens.
+ *
+ * The panel image is a bundled campaign still rather than an admin banner:
+ * banners carry promotional artwork (sale creatives, third-party campaigns)
+ * that reads wrong behind a sign-in form.
  */
 export function AuthLayout({
   eyebrow,
@@ -24,27 +25,24 @@ export function AuthLayout({
   children: ReactNode;
   footer?: ReactNode;
 }) {
-  const { data: banners = [] } = useQuery(bannersOptions());
-  const hero = banners.find((b) => b.image)?.image;
-
   return (
     <div className="grid min-h-screen lg:grid-cols-[1.1fr_1fr]">
       {/* Editorial panel */}
       <aside className="relative hidden overflow-hidden bg-ink lg:block">
-        {hero && (
-          <motion.img
-            src={hero}
-            alt=""
-            aria-hidden
-            initial={{ scale: 1.12, opacity: 0 }}
-            animate={{ scale: 1, opacity: 0.85 }}
-            transition={{ duration: 2.4, ease: EASE }}
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-        )}
-        {/* Enough scrim for the copy to stay legible, light enough that the
-            campaign image still reads. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-ink/95 via-ink/25 to-ink/30" />
+        {/* Only the scale is animated — fading opacity in from 0 left the
+            panel near-black whenever a re-render restarted the transition. */}
+        <motion.img
+          src={authEditorial.url}
+          alt=""
+          aria-hidden
+          initial={{ scale: 1.1 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 2.4, ease: EASE }}
+          className="absolute inset-0 h-full w-full object-cover object-top"
+        />
+        {/* This still is already dark and moody, so it needs far less scrim
+            than a bright promo image would — just enough under the copy. */}
+        <div className="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/10 to-ink/20" />
 
         <div className="relative flex h-full flex-col justify-between p-14">
           <Link
@@ -54,20 +52,18 @@ export function AuthLayout({
             Maison
           </Link>
 
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.3, ease: EASE }}
-            className="max-w-md"
-          >
-            <p className="font-display text-4xl leading-[1.15] text-cream">
+          {/* Deliberately not animated in: the panel is hidden below lg, and a
+              mount that happens while it's display:none leaves an opacity-0
+              entry animation stranded — the copy simply never appears. */}
+          <div className="max-w-md">
+            <p className="font-display text-4xl leading-[1.15] text-cream drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]">
               Pieces made in small numbers, kept for a long time.
             </p>
-            <p className="mt-6 text-sm leading-relaxed text-cream/60">
+            <p className="mt-6 text-sm leading-relaxed text-cream/70 drop-shadow-[0_1px_8px_rgba(0,0,0,0.5)]">
               An account keeps your orders, saved pieces and delivery details in
               one place.
             </p>
-          </motion.div>
+          </div>
         </div>
       </aside>
 
@@ -81,9 +77,11 @@ export function AuthLayout({
             Maison
           </Link>
 
+          {/* Slides but never fades: this wraps the sign-in form itself, and a
+              stranded opacity-0 would hide the whole thing. */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ y: 16 }}
+            animate={{ y: 0 }}
             transition={{ duration: 0.8, ease: EASE }}
             className="mt-10 lg:mt-0"
           >
