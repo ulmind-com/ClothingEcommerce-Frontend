@@ -14,7 +14,7 @@ export function SiteFooter() {
         className="h-24 md:h-32 w-full"
         style={{
           background:
-            "linear-gradient(to bottom, var(--color-cream, #f5f0e8) 0%, #efdcb4 55%, #e5c99a 85%, #e2c697 100%)",
+            "linear-gradient(to bottom, var(--color-cream, #f5f0e8) 0%, #f0dcb0 45%, #ebd4a2 75%, #e7d5ae 100%)",
         }}
       />
       <div className="w-full -mt-px">
